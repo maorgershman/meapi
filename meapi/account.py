@@ -7,9 +7,11 @@ class Account:
 
     def phone_search(self, phone_number: Union[str, int]) -> Union[dict, None]:
         """
-        Get information on phone number
+        Get basic information on phone number
         :param phone_number:
-        :return:
+        :return: dict with data
+        :example: existing_user - https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-phone_search_existed_user-py
+        :example: non_user - https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-phone_search_non_user-py
         """
         try:
             response = self.make_request(req_type='get', endpoint='/main/contacts/search/?phone_number=' + str(self.valid_phone_number(phone_number)))
@@ -25,7 +27,7 @@ class Account:
          information and perform social actions.
         :param uuid: id of Me user. if none - get self profile
         :return: dict with details
-        example: https://gist.github.com/david-lev/39820485f561cc39a790b337649488b7
+        example: https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-profile-py
         """
         if uuid:
             return self.make_request('get', '/main/users/profile/' + str(uuid))
@@ -65,7 +67,7 @@ class Account:
         Update profile info
         :param login_type: email
         :param country_code: Your phone number country_code (972 = IL etc.)
-        :param date_of_birth: year-month-day format
+        :param date_of_birth: YYYY-MM-DD format
         :param device_type: android/ios
         :param email: name@domian.com
         :param facebook_url: facebook id, for example 24898745174639
@@ -81,11 +83,13 @@ class Account:
         body = {}
         if country_code is not None:
             body['country_code'] = str(country_code).upper()[:2]
-        if match(r"^\d{4}-\d{1,2}-\d{1,2}", str(date_of_birth)):
+        if not match(r"^\d{4}(\-)([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))$", str(date_of_birth)):
+            raise MeException("Date of birthday must be in YYYY-MM-DD format!")
+        if date_of_birth is not None:
             body['date_of_birth'] = str(date_of_birth)
         if str(device_type) in device_types:
             body['device_type'] = str(device_type)
-        if str(login_type) is not None:
+        if login_type is not None:
             body['login_type'] = str(login_type)
         if match(r"^\S+@\S+\.\S+$", str(email)):
             body['email'] = str(email)
@@ -107,8 +111,10 @@ class Account:
 
         results = self.make_request('patch', '/main/users/profile/', body)
         failed = []
-        for key in results.keys():
-            if results[key] != body[key]:
+        for key in body.keys():
+            if results[key] != body[key] and key != 'profile_picture':
+                # Can't check if profile picture updated because Me convert's it to their own url.
+                # you can check before and after.. get_settings()
                 failed.append(key)
         return not bool(failed), failed
 
