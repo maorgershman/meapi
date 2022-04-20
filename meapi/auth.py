@@ -1,4 +1,4 @@
-from json import load, JSONDecodeError, dumps, dump, loads
+from json import load, JSONDecodeError, dump
 from os import path
 from re import match
 from meapi.exceptions import MeException, MeApiException
@@ -40,9 +40,8 @@ class Auth:
                 return self.activate_account()
 
         if access_token:
-            print(access_token)
-            self.credentials_manager(results)
             self.access_token = access_token
+            self.credentials_manager(results)
             return True
         else:
             return False
@@ -92,7 +91,9 @@ class Auth:
             if not data.get('access') or not data.get('refresh'):
                 raise MeException(f"Wrong data provided! {data}")
             with open(self.config_file, "w") as config_file:
+                pwd_token = existing_content[str(self.phone_number)].get('pwd_token')
                 existing_content[str(self.phone_number)] = data
-                auth_data = existing_content
-                dump(auth_data, config_file, indent=4, sort_keys=True)
-            return auth_data[str(self.phone_number)]
+                existing_content[str(self.phone_number)]['uuid'] = self.get_uuid()
+                existing_content[str(self.phone_number)]['pwd_token'] = pwd_token
+                dump(existing_content, config_file, indent=4, sort_keys=True)
+            return existing_content[str(self.phone_number)]
