@@ -1,5 +1,4 @@
-from typing import Tuple, List, Any
-
+from typing import Tuple, List
 from meapi.exceptions import MeException
 
 
@@ -34,9 +33,8 @@ class Settings:
         for setting, value in args.items():
             if value is not None and setting != 'self':
                 body[setting] = value
-                print(body)
         if not body:
-            raise MeException("You need to provide at least one setting!")
+            raise MeException("You need to change at least one setting!")
 
         results = self.make_request('patch', '/main/settings/', body)
         failed = []
@@ -44,39 +42,3 @@ class Settings:
             if results[setting] != body[setting]:
                 failed.append(setting)
         return not bool(failed), failed
-
-    def change_notification_settings(self,
-                                     who_deleted_notification_enabled: bool = None,
-                                     who_watched_notification_enabled: bool = None,
-                                     distance_notification_enabled: bool = None,
-                                     system_notification_enabled: bool = None,
-                                     birthday_notification_enabled: bool = None,
-                                     comments_notification_enabled: bool = None,
-                                     names_notification_enabled: bool = None,
-                                     notifications_enabled: bool = None) -> bool:
-        """
-        Set new settings for notifications
-        :param who_deleted:
-        :param who_watched:
-        :param distance:
-        :param system:
-        :param birthday:
-        :param comments:
-        :param names:
-        :param notifications:
-        :return: is all changes successes
-        """
-        args = locals()
-        body = {}
-        for setting, value in args.items():
-            if value is not None and setting != 'self':
-                body[setting] = value
-        if not body:
-            raise MeException("You need to provide at least one setting!")
-
-        results = self.make_request('patch', '/main/settings/', body)
-        failed = []
-        for setting in body.keys():
-            if results[setting] != body[setting]:
-                failed.append(setting)
-        return True
