@@ -29,7 +29,6 @@ class Auth:
         try:
             print("** Trying to authorize...")
             results = self.make_request(req_type='post', endpoint='/auth/authorization/activate/', body=data, auth=False)
-            print(results)
             if results['access']:
                 access_token = results['access']
             else:
@@ -40,6 +39,7 @@ class Auth:
                 return self.activate_account()
 
         if access_token:
+            print("Verification completed.")
             self.access_token = access_token
             self.credentials_manager(results)
             return True
@@ -57,9 +57,11 @@ class Auth:
                 return True
         body = {"phone_number": str(self.phone_number),
                 "pwd_token": auth_data['pwd_token']}
+        print("Generating new access token...")
         auth_data = self.make_request(req_type='post', endpoint='/auth/authorization/login/', body=body, auth=False)
         access_token = auth_data['access']
         if access_token:
+            print("Verification completed.")
             self.access_token = access_token
             self.credentials_manager(auth_data)
             return True
@@ -82,18 +84,25 @@ class Auth:
                 raise MeException("Not a valid json file: " + self.config_file)
         if not data:
             if not existing_content.get(str(self.phone_number)):
-                print(existing_content)
                 if self.activate_account():
                     return self.credentials_manager()
             else:
-                return existing_content.get(str(self.phone_number))
+                existing_content = existing_content.get(str(self.phone_number))
+                self.uuid = existing_content['uuid']
+                return existing_content
         else:
             if not data.get('access') or not data.get('refresh'):
                 raise MeException(f"Wrong data provided! {data}")
             with open(self.config_file, "w") as config_file:
-                pwd_token = existing_content[str(self.phone_number)].get('pwd_token')
+                pwd_token = None
+                if existing_content:
+                    if existing_content.get(str(self.phone_number)):
+                        pwd_token = existing_content.get(str(self.phone_number)).get('pwd_token')
+                uuid = self.get_uuid()
+                self.uuid = uuid
                 existing_content[str(self.phone_number)] = data
-                existing_content[str(self.phone_number)]['uuid'] = self.get_uuid()
-                existing_content[str(self.phone_number)]['pwd_token'] = pwd_token
+                existing_content[str(self.phone_number)]['uuid'] = uuid
+                if pwd_token:
+                    existing_content[str(self.phone_number)]['pwd_token'] = pwd_token
                 dump(existing_content, config_file, indent=4, sort_keys=True)
             return existing_content[str(self.phone_number)]

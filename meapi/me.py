@@ -11,6 +11,7 @@ class Me(Auth, Account, Social, Settings, Notifications, Util):
     def __init__(self,
                  phone_number: int,
                  access_token: str = None,
+                 uuid: str = None,
                  config_file: str = None,
                  proxies: dict = None):
 
@@ -20,6 +21,7 @@ class Me(Auth, Account, Social, Settings, Notifications, Util):
             self.config_file = config_file
 
         self.access_token = access_token
+        self.uuid = uuid
         self.phone_number = self.valid_phone_number(phone_number)
         self.proxies = proxies
 
@@ -27,4 +29,3 @@ class Me(Auth, Account, Social, Settings, Notifications, Util):
             auth_data = self.credentials_manager()
             if auth_data:
                 self.access_token = auth_data['access']
-
