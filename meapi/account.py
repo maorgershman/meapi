@@ -44,13 +44,20 @@ class Account:
         try:
             return self.get_profile_info()['uuid']
         except MeApiException as err:
-            if err.http_status == 401 and err.msg['detail'] == "User not found" and not self.uuid:  # on login, if no active account on this number
+            if err.http_status == 401:  # on login, if no active account on this number
                 print("** This is a new account and you need to register first.")
-                first_name = input("* Enter your first name: ")
-                last_name = input("* Enter your last name: ")
-                email = input("* Enter your email: ")
-                self.update_profile_info(first_name=first_name, last_name=last_name, email=email, login_type='email')
-                return self.get_uuid()
+                first_name = None
+                while not first_name:
+                    first_name = input("* Enter your first name (Required): ")
+                last_name = input("* Enter your last name (Optional): ") or None
+                email = input("* Enter your email (Optional): ") or None
+                results = self.update_profile_info(first_name=first_name, last_name=last_name, email=email, login_type='email')
+                if results[0]:
+                    return self.get_uuid()
+                else:
+                    raise MeException("Can't update the following details: " + ", ".join(results[1]))
+            else:
+                raise err
 
     def update_profile_info(self, country_code: str = None,
                             date_of_birth: str = None,
@@ -83,9 +90,9 @@ class Account:
         body = {}
         if country_code is not None:
             body['country_code'] = str(country_code).upper()[:2]
-        if not match(r"^\d{4}(\-)([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))$", str(date_of_birth)):
-            raise MeException("Date of birthday must be in YYYY-MM-DD format!")
         if date_of_birth is not None:
+            if not match(r"^\d{4}(\-)([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))$", str(date_of_birth)):
+                raise MeException("Date of birthday must be in YYYY-MM-DD format!")
             body['date_of_birth'] = str(date_of_birth)
         if str(device_type) in device_types:
             body['device_type'] = str(device_type)
@@ -99,8 +106,11 @@ class Account:
             body['first_name'] = str(first_name)
         if last_name is not None:
             body['last_name'] = str(last_name)
-        if gender is not None and str(gender).upper() in genders.keys():
-            body['gender'] = genders.get(str(gender.upper()))
+        if gender is not None:
+            if str(gender).upper() in genders.keys():
+                body['gender'] = genders.get(str(gender.upper()))
+            else:
+                raise MeException("Gender must be: 'F' for female, 'M' for Male, and 'N' for null.")
         if match(r"(https?:\/\/.*\.(?:png|jpg))", str(profile_picture_url)):
             body['profile_picture'] = profile_picture_url
         if slogan is not None:
