@@ -267,7 +267,7 @@ class Social:
                 if status == new_status:
                     successes += 1
 
-        return bool(not_null_values == successes)
+        return bool(not_null_values - 1 == successes)
 
     def numbers_count(self):
         """
