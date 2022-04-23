@@ -1,6 +1,7 @@
 from re import match, sub
 from typing import List, Union, Tuple
 from meapi.exceptions import MeException, MeApiException
+from datetime import datetime, date
 
 
 class Social:
@@ -644,7 +645,7 @@ class Social:
         """
         Ask another user to turn on comments in his profile.
 
-        :param uuid: User uuid. (See :py:func:`get_uuid`).
+        :param uuid: User uuid (See :py:func:`get_uuid`).
         :type uuid: str
         :return: Is request success.
         :rtype: bool
@@ -663,3 +664,37 @@ class Social:
         """
         body = {"uuid": str(uuid)}
         return self.make_request('post', '/main/users/profile/suggest-turn-on-mutual/', body)['requested']
+
+    def get_age(self, uuid=None) -> float:
+        """
+        Get user age (calculate from date_of_birth, provided by :py:func:`get_profile_info`).
+        :param uuid: User uuid. (See :py:func:`get_uuid`). Default: Your uuid.
+        :type uuid: str
+        :return: User age if date of birth exists. else - 0.0
+        :rtype: float
+        """
+        if not uuid:
+            date_of_birth = self.get_profile_info()['profile']['date_of_birth']
+        else:
+            print(self.get_profile_info(uuid))
+            date_of_birth = self.get_profile_info(uuid)['profile']['date_of_birth']
+        if match(r"^\d{4}(\-)([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))$", str(date_of_birth)):
+            days_in_year = 365.2425
+            return round((date.today() - datetime.strptime(date_of_birth, "%Y-%m-%d").date()).days / days_in_year, 1)
+        else:
+            return 0.0
+
+    def is_spammer(self, phone_number: Union[int, str]) -> int:
+        """
+        Check on phone number if reported as spam.
+
+        :param phone_number: International phone number format.
+        :type phone_number: Union[int, str]
+        :return: count of spam reports. 0 if None.
+        :rtype: int
+        """
+        results = self.phone_search(phone_number)
+        if results:
+            return results['contact']['suggested_as_spam']
+        else:
+            return 0
