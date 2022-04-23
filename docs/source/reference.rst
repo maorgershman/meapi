@@ -39,6 +39,8 @@ Social
 .. automethod:: Me.get_socials
 .. automethod:: Me.add_social
 .. automethod:: Me.remove_social
+.. automethod:: Me.is_spammer
+.. automethod:: Me.get_age
 
 Groups
 ________
@@ -48,7 +50,6 @@ ________
 .. automethod:: Me.restore_name
 .. automethod:: Me.ask_group_rename
 
-
 Comments
 ________
 .. automethod:: Me.get_comments
@@ -56,4 +57,17 @@ ________
 .. automethod:: Me.publish_comment
 .. automethod:: Me.approve_comment
 .. automethod:: Me.like_comment
+
+Notifications
+---------
+.. automethod:: Me.unread_notifications_count
+.. automethod:: Me.get_notifications
+.. automethod:: Me.read_notification
+
+Settings
+---------
+.. automethod:: Me.get_settings
+.. automethod:: Me.change_social_settings
+.. automethod:: Me.change_notification_settings
+
 

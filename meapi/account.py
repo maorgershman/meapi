@@ -19,6 +19,9 @@ def get_contacts(contacts: List[dict]) -> List[dict]:
 
 
 def get_calls(calls: List[dict]) -> List[dict]:
+    """
+    Gets list of dict of calls and return the valid calls in the same format. to use of add_calls_to_log and remove_calls_from_log methods
+    """
     calls_list = []
     for call in calls:
         if isinstance(call, dict):
@@ -284,7 +287,7 @@ class Account:
         :rtype: str
         """
         if phone_number:
-            return self.phone_search(phone_number).get('contact').get('uuid')
+            return self.phone_search(phone_number).get('contact').get('user').get('uuid')
         try:
             return self.get_profile_info()['uuid']
         except MeApiException as err:
@@ -320,7 +323,7 @@ class Account:
 
         :param login_type: ``email``. Default: ``None``
         :type login_type: str
-        :param country_code: Your phone number country_code (``972`` = ``IL`` etc.) // https://countrycode.org/. Default: ``None``
+        :param country_code: Your phone number country_code (``972`` = ``IL`` etc.) // `Country codes <https://countrycode.org/>`_. Default: ``None``
         :type country_code: str
         :param date_of_birth: ``YYYY-MM-DD`` format. for example: ``1997-05-15``. Default: ``None``
         :type date_of_birth: str
@@ -336,7 +339,7 @@ class Account:
         :type last_name: str
         :param gender: ``M`` for male, ``F`` for and ``N`` for None. Default: ``None``
         :type gender: str
-        :param profile_picture_url: Direct image url. for example: https://example.com/image.png. Default: ``None``
+        :param profile_picture_url: Direct image url. for example: ``https://example.com/image.png``. Default: ``None``
         :type profile_picture_url: str
         :param slogan: Your bio. Default: ``None``
         :type slogan: str
