@@ -5,23 +5,45 @@ from meapi.exceptions import MeException, MeApiException
 
 class Social:
 
-    def friendship(self, phone_number: int) -> dict:
+    def friendship(self, phone_number: Union[int, str]) -> dict:
         """
-        Get info like count mutual friends, total calls duration, how do you name each other,
-         calls count, your watches, comments, and more.
-        :param phone_number: phone number of the person
-        :return: dict with friendship data
-        example: https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-friendship-py
+        Get friendship information between you and another number.
+        like count mutual friends, total calls duration, how do you name each other, calls count, your watches, comments, and more.
+
+        :param phone_number: International phone number format.
+        :type phone_number: Union[int, str]
+        :return: Dict with friendship data.
+        :rtype: dict
+        Example::
+
+            {
+                "calls_duration": None,
+                "he_called": 0,
+                "he_named": "He named",
+                "he_watched": 3,
+                "his_comment": None,
+                "i_called": 0,
+                "i_named": "You named",
+                "i_watched": 2,
+                "is_premium": False,
+                "mutual_friends_count": 6,
+                "my_comment": None,
+            }
         """
         return self.make_request('get', '/main/contacts/friendship/?phone_number=' + str(self.valid_phone_number(phone_number)))
 
     def report_spam(self, country_code: str, spam_name: str, phone_number: Union[str, int]) -> bool:
         """
-        Report spam on phone number.
-        :param country_code: 2 letters code, IL, IT, US etc.
-        :param spam_name: the spam name that you want to give to the spammer
-        :param phone_number: spammer phone number
-        :return: is report success
+        Report spam on another phone number.
+
+        :param country_code: Two letters code, ``IL``, ``IT``, ``US`` etc. // https://countrycode.org.
+        :type country_code: str
+        :param spam_name: The spam name that you want to give to the spammer.
+        :type spam_name: str
+        :param phone_number: spammer phone number in international format.
+        :type phone_number: Union[int, str]
+        :return: Is report success
+        :rtype: bool
         """
         body = {"country_code": country_code.upper(), "is_spam": True, "is_from_v": False,
                 "name": str(spam_name), "phone_number": str(self.valid_phone_number(phone_number))}
@@ -30,129 +52,451 @@ class Social:
     def who_deleted(self) -> List[dict]:
         """
         Get list of contacts dicts who deleted you from their contacts.
-        ** who_deleted must be enabled in your settings account: me_client.change_social_settings(who_deleted = True) **
+
+        **The** ``who_deleted`` **configuration must be enabled in your settings account in order to see who deleted you. See** :py:func:`change_social_settings`.
+
         :return: list of dicts
-        example: https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-who_deleted-py
+        :rtype: List[dict]
+        Example::
+
+            [
+                {
+                    "created_at": "2021-09-12T15:42:57Z",
+                    "user": {
+                        "email": "",
+                        "profile_picture": None,
+                        "first_name": "Test",
+                        "last_name": "Test",
+                        "gender": None,
+                        "uuid": "aa221ae8-XXX-4679-XXX-91307XXX5a9a2",
+                        "is_verified": False,
+                        "phone_number": 123456789012,
+                        "slogan": None,
+                        "is_premium": False,
+                        "verify_subscription": True,
+                    },
+                }
+            ]
         """
         return self.make_request('get', '/main/users/profile/who-deleted/')
 
     def who_watched(self) -> List[dict]:
         """
-        Get list of contacts dicts who watched your profile.
-        ** who_watched must be enabled in your settings account: me_client.change_social_settings(who_watched = True) **
+         Get list of contacts dicts who watched your profile.
+
+        **The** ``who_watched`` **configuration must be enabled in your settings account in order to see watched. See** :py:func:`change_social_settings`.
+
         :return: list of dicts
-        example: https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-who_watched-py
+        :rtype: List[dict]
+        Example::
+
+            [
+                {
+                    "last_view": "2022-04-16T17:13:24Z",
+                    "user": {
+                        "email": "eliezXXXXXXXXX94@gmail.com",
+                        "profile_picture": "https://d18zXXXXXXXXXXXXXcb14529ccc7db.jpg",
+                        "first_name": "Test",
+                        "last_name": None,
+                        "gender": None,
+                        "uuid": "f8d03XXX97b-ae86-35XXXX9c6e5",
+                        "is_verified": False,
+                        "phone_number": 97876453245,
+                        "slogan": None,
+                        "is_premium": True,
+                        "verify_subscription": True,
+                    },
+                    "count": 14,
+                    "is_search": None,
+                }
+            ]
         """
         return self.make_request('get', '/main/users/profile/who-watched/')
 
     def get_comments(self, uuid: str = None) -> dict:
         """
-        Get user comments
-        :param uuid: if none, get self comments
-        :return: dict with list of comments
-        example: https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-comments-py
+        Get user comments.
+
+        :param uuid: User uuid. (See :py:func:`get_uuid`). Default: Your uuid.
+        :type uuid: str
+        :return: Dict with list of comments.
+        :rtype: Dict[list]
+        Example::
+
+            {
+                "comments": [
+                    {
+                        "like_count": 2,
+                        "status": "approved",
+                        "message": "Test comment",
+                        "author": {
+                            "email": "XXXXXXXXX14@gmail.com",
+                            "profile_picture": "https://d18zaexen4dp1s.cloudfront.net/593a9XXXXXXd7437XXXX7.jpg",
+                            "first_name": "Name test",
+                            "last_name": "",
+                            "gender": None,
+                            "uuid": "8a0XXXXXXXXXXX0a-83XXXXXXb597",
+                            "is_verified": True,
+                            "phone_number": 123456789098,
+                            "slogan": "https://example.com",
+                            "is_premium": False,
+                            "verify_subscription": True,
+                        },
+                        "is_liked": False,
+                        "id": 662,
+                        "comments_blocked": False,
+                    },
+                    {
+                        "like_count": 2,
+                        "status": "approved",
+                        "message": "hhaha",
+                        "author": {
+                            "email": "haXXXXiel@gmail.com",
+                            "profile_picture": None,
+                            "first_name": "Test",
+                            "last_name": "Test",
+                            "gender": None,
+                            "uuid": "59XXXXXXXXXXXX-b6c7-f2XXXXXXXXXX26d267",
+                            "is_verified": False,
+                            "phone_number": 914354653176,
+                            "slogan": None,
+                            "is_premium": False,
+                            "verify_subscription": True,
+                        },
+                        "is_liked": True,
+                        "id": 661,
+                        "comments_blocked": False,
+                    },
+                ],
+                "count": 2,
+                "user_comment": None,
+            }
         """
         if not uuid:
             uuid = self.uuid
         return self.make_request('get', '/main/comments/list/' + uuid)
 
-    def get_comment(self, comment_id) -> dict:
+    def get_comment(self, comment_id: Union[int, str]) -> dict:
         """
-        Get comment details, who liked, create time and more
-        :param comment_id:
-        :return: dict of details
-        example: https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-comment-py
+        Get comment details, comment text, who and how many liked, create time and more.
+
+        :param comment_id: Comment id from :py:func:`get_comments`
+        :type comment_id: Union[int, str]
+        :return: Dict with comment details.
+        :rtype: dict
+        Example::
+
+            {
+                "comment_likes": [
+                    {
+                        "author": {
+                            "email": "yonXXXXXX@gmail.com",
+                            "first_name": "Jonatan",
+                            "gender": "M",
+                            "is_premium": False,
+                            "is_verified": True,
+                            "last_name": "Fa",
+                            "phone_number": 97655764547,
+                            "profile_picture": "https://d18zaexXXXp1s.cloudfront.net/2eXXefea6dXXXXXXe3.jpg",
+                            "slogan": None,
+                            "uuid": "807XXXXX2-414a-b7XXXXX92cd679",
+                            "verify_subscription": True,
+                        },
+                        "created_at": "2022-04-17T16:53:49Z",
+                        "id": 194404,
+                    }
+                ],
+                "like_count": 1,
+                "message": "Test comment",
+            }
         """
         return self.make_request('get', '/main/comments/retrieve/' + str(comment_id))
 
-    def approve_comment(self, comment_id: int) -> bool:
+    def approve_comment(self, comment_id: Union[str, int]) -> bool:
         """
-        Approve user comment
-        :param comment_id: comment id
-        :return: is approve success
+        Approve comment. (You can always delete it with :py:func:`delete_comment`.)
+
+        :param comment_id: Comment id from :py:func:`get_comments`.
+        :type comment_id: Union[str, int]
+        :return: Is approve success.
+        :rtype: bool
         """
         return bool(self.make_request('post', '/main/comments/approve/' + str(comment_id))['status'] == 'approved')
 
-    def delete_comment(self, comment_id: int) -> bool:
+    def delete_comment(self, comment_id: Union[str, int]) -> bool:
         """
-        Ignore user comment
-        :param comment_id: comment id
-        :return: is delete success
+        Delete (Ignore) comment. (you can always approve it with :py:func:`approve_comment`.)
+
+        :param comment_id: Comment id from :py:func:`get_comments`.
+        :type comment_id: Union[int, str]
+        :return: Is deleting success.
+        :rtype: bool
         """
         return bool(self.make_request('delete', '/main/comments/approve/' + str(comment_id))['status'] == 'ignored')
 
-    def like_comment(self, comment_id: int) -> dict:
+    def like_comment(self, comment_id: Union[int, str]) -> dict:
         """
-        Like comment
-        :param comment_id: comment id
-        :return: is like success
+        Like comment.
+
+        :param comment_id: Comment id from :py:func:`get_comments`.
+        :type comment_id: Union[int, str]
+        :return: Is like success.
+        :rtype: bool
         """
         return self.make_request('post', '/main/comments/like/' + str(comment_id))
 
     def publish_comment(self, uuid: str, comment: str) -> Union[int, bool]:
         """
-        Publish comment for another user
-        :param uuid: uuid of the commented user
-        :param comment: your comment
-        :return: comment id if success, else falsy
+        Publish comment for another user.
+
+        :param uuid: uuid of the commented user. See :py:func:`get_uuid`.
+        :type uuid: str
+        :param comment: Your comment
+        :type comment: str
+        :return: comment_id if success, else False.
+        :rtype: Union[int, bool]
         """
         body = {"message": str(comment)}
         results = self.make_request('get', '/main/comments/add/' + str(uuid), body)
-        return results.get('id') if results.get('status') == 'waiting' else False
+        return int(results.get('id')) if results.get('status') == 'waiting' else False
 
-    def get_groups(self) -> dict:
+    def get_groups_names(self) -> dict:
         """
-        How people named you
-        :return: dict with groups
-        example: https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-groups-py
+        Get groups of names 'how people named you'.
+
+        :return: Dict with groups.
+        :rtype: dict
+        Example::
+
+            {
+                "cached": False,
+                "groups": [
+                    {
+                        "name": "This is how they name you",
+                        "count": 1,
+                        "last_contact_at": "2020-06-09T12:24:51Z",
+                        "contacts": [
+                            {
+                                "id": 2218840161,
+                                "created_at": "2020-06-09T12:24:51Z",
+                                "modified_at": "2020-06-09T12:24:51Z",
+                                "user": {
+                                    "profile_picture": "https://XXXXp1s.cloudfront.net/28d5XXX96953feX6.jpg",
+                                    "first_name": "joz",
+                                    "last_name": "me",
+                                    "uuid": "0577XXX-1XXXe-d338XXX74483",
+                                    "is_verified": False,
+                                    "phone_number": 954353655531,
+                                },
+                                "in_contact_list": True,
+                            }
+                        ],
+                        "contact_ids": [2213546561],
+                    }
+                ],
+            }
         """
         return self.make_request('get', '/main/names/groups/')
 
-    def get_deleted_groups(self) -> dict:
+    def get_deleted_names(self) -> dict:
         """
-        Get deleted group names
-        :return: dict with names and id's
+        Get group names that you deleted.
+
+        :return: dict with names and contact ids.
+        :rtype: dict
+        Example::
+
+            {
+                "names": [
+                    {
+                        "contact_id": 40108734246,
+                        "created_at": "2022-04-18T06:08:33Z",
+                        "hidden_at": "2022-04-23T20:45:19Z",
+                        "name": "My delivery guy",
+                        "user": {
+                            "email": "pnhfdishfois@gmail.com",
+                            "profile_picture": None,
+                            "first_name": "Joe",
+                            "last_name": "",
+                            "gender": None,
+                            "uuid": "52XXXXX-b952-XXXX-853e-XXXXXX",
+                            "is_verified": False,
+                            "phone_number": 9890987986,
+                            "slogan": None,
+                            "is_premium": False,
+                            "verify_subscription": True,
+                        },
+                        "in_contact_list": True,
+                    }
+                ],
+                "count": 1,
+                "contact_ids": [409879786],
+            }
         """
         return self.make_request('get', '/main/settings/hidden-names/')
 
-    def delete_group_name(self, group_ids: Union[int, List[int]]) -> bool:
+    def delete_name(self, contacts_ids: Union[int, str, List[Union[int, str]]]) -> bool:
         """
-        Delete group name
-        :param group_ids: group ids
-        :return:
-        """
-        if not isinstance(group_ids, list):
-            group_ids = [group_ids]
-        body = {"contact_ids": [str(_id) for _id in group_ids]}
-        return self.make_request('get', '/main/contacts/hide/', body)['success']
+        Delete group name (You can also ask for rename with :py:func:`ask_group_rename`. and you can restore deleted group with :py:func:`restore_name`).
 
-    def restore_group(self, group_ids: Union[int, List[int]]) -> bool:
+        :param contacts_ids: Single or list of contact ids from the same group (See :py:func:`get_groups_names`).
+        :type contacts_ids: Union[int, str, List[Union[int, str]]]
+        :return: Is delete success.
+        :rtype: bool
         """
-        Restore deleted group from get_deleted_groups()
-        :param group_ids: group id/s
-        :return: is success
+        if not isinstance(contacts_ids, list):
+            contacts_ids = [contacts_ids]
+        body = {"contact_ids": [int(_id) for _id in contacts_ids]}
+        return self.make_request('post', '/main/contacts/hide/', body)['success']
+
+    def restore_name(self, contacts_ids: Union[int, str, List[Union[int, str]]]) -> bool:
         """
-        if not isinstance(group_ids, list):
-            group_ids = [group_ids]
-        body = {"contact_ids": [int(_id) for _id in group_ids]}
+        Restore deleted group name from :py:func:`get_deleted_names`.
+
+        :param contacts_ids: Single or list of contact ids from the same deleted group (See :py:func:`get_groups_names`).
+        :type contacts_ids: Union[int, str, List[Union[int, str]]]
+        :return: Is restoring success.
+        :rtype: bool
+        """
+        if not isinstance(contacts_ids, list):
+            contacts_ids = [contacts_ids]
+        body = {"contact_ids": [int(_id) for _id in contacts_ids]}
         return self.make_request('post', '/main/settings/hidden-names/', body)['success']
 
-    def ask_group_rename(self, group_id: int, new_name: str) -> bool:
+    def ask_group_rename(self, contacts_ids: Union[int, str, List[Union[int, str]]], new_name: str) -> bool:
         """
-        Suggest new name to group of people
-        :param group_id: Group id (contact_ids)
+        Suggest new name to group of people and ask them to rename you in their contacts book.
+
+        :param contacts_ids: Single or list of contact ids from the same group (See :py:func:`get_groups_names`).
+        :type contacts_ids: Union[int, str, List[Union[int, str]]]
         :param new_name: Suggested name
-        :return: is success
+        :type new_name: str
+        :return: Is asking success.
+        :rtype: bool
         """
-        body = {"contact_ids": [group_id], "name": new_name}
+        if not isinstance(contacts_ids, list):
+            contacts_ids = [contacts_ids]
+        body = {"contact_ids": [int(_id) for _id in contacts_ids], "name": new_name}
         return self.make_request('post', '/main/names/suggestion/', body)['success']
 
-    def get_socials(self, uuid: False) -> dict:
+    def get_socials(self, uuid: None) -> dict:
         """
-        Get account connected social networks
-        :param uuid: if not uuid, return self account socials
-        :return: dict with social network and posts
-        example: https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-socials-py
+        Get connected social networks to Me account.
+
+        :param uuid: User uuid. (See :py:func:`get_uuid`). Default: Your uuid.
+        :type uuid: str
+        :return: Dict with social networks and posts.
+        :rtype: dict
+        Example::
+
+            {
+                "social": {
+                    "facebook": {
+                        "is_active": False,
+                        "is_hidden": True,
+                        "posts": [],
+                        "profile_id": None,
+                    },
+                    "fakebook": {
+                        "is_active": False,
+                        "is_hidden": True,
+                        "posts": [],
+                        "profile_id": None,
+                    },
+                    "instagram": {
+                        "is_active": False,
+                        "is_hidden": True,
+                        "posts": [],
+                        "profile_id": None,
+                    },
+                    "linkedin": {
+                        "is_active": False,
+                        "is_hidden": True,
+                        "posts": [],
+                        "profile_id": None,
+                    },
+                    "pinterest": {
+                        "is_active": False,
+                        "is_hidden": True,
+                        "posts": [],
+                        "profile_id": None,
+                    },
+                    "spotify": {
+                        "is_active": False,
+                        "is_hidden": False,
+                        "posts": [
+                            {
+                                "author": "David Lev",
+                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/9bc7efa7d1059313a97b704b5fd4c3ac.jpg",
+                                "posted_at": None,
+                                "redirect_id": "4KgES5cs3SnMhuAXuBREW2",
+                                "text_first": "🇮🇱 ישראלי לנשמה 🇮🇱",
+                                "text_second": "157",
+                            },
+                            {
+                                "author": "David Lev",
+                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/ecc6b4bf8cb67e2e6a2ae4fe2423819a.jpg",
+                                "posted_at": None,
+                                "redirect_id": "4WWYBPI4PGH09sKmeagiXj",
+                                "text_first": "♻️ לועזי מקפיץ ♻️",
+                                "text_second": "1711",
+                            },
+                            {
+                                "author": "David Lev",
+                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/55d31900d3e3b3f9e726b9040bc5ddf4.jpg",
+                                "posted_at": None,
+                                "redirect_id": "3FjSlJSRNe0ohCQPB14i7t",
+                                "text_first": "⚜️ המועדפים שלי ⚜️",
+                                "text_second": "272",
+                            },
+                        ],
+                        "profile_id": "4xgot8coriuhr6ad9f29pt0pv",
+                    },
+                    "tiktok": {
+                        "is_active": False,
+                        "is_hidden": True,
+                        "posts": [],
+                        "profile_id": None,
+                    },
+                    "twitter": {
+                        "is_active": True,
+                        "is_hidden": False,
+                        "posts": [
+                            {
+                                "author": "RobotTrick",
+                                "owner": "RobotTrick",
+                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
+                                "posted_at": "2021-08-24T10:02:45Z",
+                                "redirect_id": "https://twitter.com/RobotTrick/status/1430108307247804423",
+                                "text_first": "📸 כך תתקינו את מצלמת Gcam של גוגל על מכשיר האנדרואיד שלכם! https://t.co/PLaQyiL2Tw https://t.co/zdyuDg8Rkk",
+                                "text_second": None,
+                            },
+                            {
+                                "author": "RobotTrick",
+                                "owner": "RobotTrick",
+                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
+                                "posted_at": "2021-08-12T10:09:23Z",
+                                "redirect_id": "https://twitter.com/RobotTrick/status/1425761322197786624",
+                                "text_first": "בוט חדש המאפשר ליצור קישור לצ'אט וואטסאפ עם הודעה כתובה מראש, כך שמי שילחץ עליו, יועבר לצ'אט עם טקסט שתגדירו מראש.https://t.co/xtqdtHttAC",
+                                "text_second": None,
+                            },
+                            {
+                                "author": "RobotTrick",
+                                "owner": "RobotTrick",
+                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
+                                "posted_at": "2021-08-09T10:21:31Z",
+                                "redirect_id": "https://twitter.com/RobotTrick/status/1424677213341986816",
+                                "text_first": "במדריך שלפניכם נתמקד בהרשאות רוט בסגנון קצת שונה ממה שהכרתם עד היום. אפליקציית Shizuku מאפשרת לכם לספק הרשאות גבוהו… https://t.co/TkubAyx0RH",
+                                "text_second": None,
+                            },
+                        ],
+                        "profile_id": "RobotTrick",
+                    },
+                }
+            }
         """
         if not uuid:
             return self.make_request('get', '/main/social/update/')
@@ -168,14 +512,23 @@ class Social:
                    linkedin_url: str = None, ) -> Tuple[bool, List[str]]:
         """
         Add social network to your me account.
-        if you have at least 2 socials, you get is_verified = true in your profile (blue check).
-        :param twitter_token: Get token introduction - 'https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-twitter_token-md'
-        :param spotify_token: Get token - 'https://accounts.spotify.com/authorize?client_id=0b1ea72f7dce420583038b49fd04be50&response_type=code&redirect_uri=https://app.mobile.me.app/&scope=user-read-email%20playlist-read-private%27'
-        :param instagram_token: Get token - 'https://api.instagram.com/oauth/authorize/?app_id=195953705182737&redirect_uri=https://app.mobile.me.app/&response_type=code&scope=user_profile,user_media%27'
-        :param facebook_token: Get token - 'https://m.facebook.com/v12.0/dialog/oauth?cct_prefetching=0&client_id=799397013456724%27'
-        :param pinterest_url: Url - 'https://www.pinterest.com/username/'
-        :param linkedin_url: Url 'https://www.linkedin.com/in/username'
-        :return: (bool is_success, list of failed)
+
+        - **if you have at least 2 socials, you get** ``is_verified`` = ``True`` **in your profile (Blue check).**
+
+        :param twitter_token: `Twitter Token <https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-twitter_token-md>`_. Default = None.
+        :type twitter_token: str
+        :param spotify_token: `Spotify token <https://accounts.spotify.com/authorize?client_id=0b1ea72f7dce420583038b49fd04be50&response_type=code&redirect_uri=https://app.mobile.me.app/&scope=user-read-email%20playlist-read-private>`_. Default = None.
+        :type spotify_token: str
+        :param instagram_token: `Instagram token <https://api.instagram.com/oauth/authorize/?app_id=195953705182737&redirect_uri=https://app.mobile.me.app/&response_type=code&scope=user_profile,user_media>`_. Default = None.
+        :type instagram_token: str
+        :param facebook_token: `Facebook token <https://facebook.com/v12.0/dialog/oauth?cct_prefetching=0&client_id=799397013456724>`_. Default = None.
+        :type facebook_token: str
+        :param pinterest_url: Profile url - ``https://www.pinterest.com/username/``. Default = None.
+        :type pinterest_url: str
+        :param linkedin_url: Profile url - ``https://www.linkedin.com/in/username``. Default = None.
+        :type linkedin_url: str
+        :return: Tuple of: is_success, list of failed.
+        :rtype: Tuple[bool, List[str]]
         """
         args = locals()
         if sum(bool(i) for i in args.values()) < 2:  # self also true
@@ -210,14 +563,22 @@ class Social:
                       linkedin: bool = False,
                       ) -> bool:
         """
-        Remove social media from your profile
-        :param twitter:
-        :param spotify:
-        :param instagram:
-        :param facebook:
-        :param pinterest:
-        :param linkedin:
-        :return: is removal success
+        Remove social networks from your profile.
+
+        :param twitter: To remove Twitter. Default: False
+        :type twitter: bool
+        :param spotify: To remove Spotify. Default: False
+        :type spotify: bool
+        :param instagram: To remove Instagram. Default: False
+        :type instagram: bool
+        :param facebook: To remove Facebook. Default: False
+        :type facebook: bool
+        :param pinterest: To remove Pinterest. Default: False
+        :type pinterest: bool
+        :param linkedin: To remove Linkedin. Default: False
+        :type linkedin: bool
+        :return: Is removal success.
+        :rtype: bool
         """
         args = locals()
         true_values = sum(bool(i) for i in args.values())
@@ -240,7 +601,8 @@ class Social:
                              linkedin: bool = None,
                              ) -> bool:
         """
-        Switch social network status: hide or show
+        Switch social network status: hide or show.
+
         :param twitter:
         :param spotify:
         :param instagram:
@@ -269,27 +631,35 @@ class Social:
 
         return bool(not_null_values - 1 == successes)
 
-    def numbers_count(self):
+    def numbers_count(self) -> int:
         """
-        Get total count of numbers on Me
-        :return: total count
+        Get total count of numbers on Me.
+
+        :return: total count.
+        :rtype: int
         """
         return self.make_request('get', '/main/contacts/count/')['count']
 
     def suggest_turn_on_comments(self, uuid: str) -> bool:
         """
-        Ask user to turn on comments in his account
-        :param uuid: user uuid
-        :return: is request success
+        Ask another user to turn on comments in his profile.
+
+        :param uuid: User uuid. (See :py:func:`get_uuid`).
+        :type uuid: str
+        :return: Is request success.
+        :rtype: bool
         """
         body = {"uuid": str(uuid)}
         return self.make_request('post', '/main/users/profile/suggest-turn-on-comments/', body)['requested']
 
     def suggest_turn_on_mutual(self, uuid: str) -> bool:
         """
-        Ask user to turn on mutual contacts
-        :param uuid: user uuid
-        :return: is request success
+        Ask another user to turn on mutual contacts on his profile.
+
+        :param uuid: User uuid. (See :py:func:`get_uuid`). Default: Your uuid.
+        :type uuid: str
+        :return: Is request success.
+        :rtype: bool
         """
         body = {"uuid": str(uuid)}
         return self.make_request('post', '/main/users/profile/suggest-turn-on-mutual/', body)['requested']

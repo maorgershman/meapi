@@ -2,3 +2,6 @@ endpoints
 __pycache__
 .idea
 meapi/config.json
+dist
+meapi.egg-info
+docs/build

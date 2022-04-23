@@ -10,8 +10,10 @@ tg_auth_url = "http://t.me/Meofficialbot?start=__iw__{}"
 class Auth:
     def activate_account(self) -> bool:
         """
-        Activate account like app auth process
-        :return: is success
+        Activate new phone number account.
+
+        :return: Is success.
+        :rtype: bool
         """
         print(f"To get access token you need to authorize yourself:"
               f"\n* Telegram: {tg_auth_url.format(self.phone_number)}\n* WhatsApp: {wa_auth_url}\n")
@@ -48,7 +50,7 @@ class Auth:
 
     def generate_access_token(self) -> bool:
         """
-        Generate new access token
+        Generate new access token.
         :return: is suceess
         """
         auth_data = self.credentials_manager()
