@@ -12,8 +12,12 @@
 #
 import os
 import sys
+
+
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, '../..')
+
+from meapi import __version__
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
@@ -23,6 +27,8 @@ project = 'meapi'
 copyright = '2022, david-lev'
 author = 'david-lev'
 
+version = __version__
+release = __version__
 
 # -- General configuration ---------------------------------------------------
 

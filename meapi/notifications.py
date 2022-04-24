@@ -14,11 +14,11 @@ notification_categories = {
 
 
 class Notifications:
-    def unread_notification_count(self) -> int:
+    def unread_notifications_count(self) -> int:
         """
         Get count of unread notifications.
 
-        :return: count of notifications
+        :return: count of notifications.
         :rtype: int
         """
         return self.make_request('get', '/notification/notification/count/')['count']

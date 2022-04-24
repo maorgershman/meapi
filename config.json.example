@@ -1,0 +1,8 @@
+{
+    "972123456789": {
+        "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.XXXXX",
+        "pwd_token": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXXXXXXXXX",
+        "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.XXXXX",
+        "uuid": "XXXXXX-XXXXX-XXXX-XXXX-XXXXXX"
+    }
+}

@@ -37,7 +37,7 @@ class Social:
         """
         Report spam on another phone number.
 
-        :param country_code: Two letters code, ``IL``, ``IT``, ``US`` etc. // https://countrycode.org.
+        :param country_code: Two letters code, ``IL``, ``IT``, ``US`` etc. // `Country codes <https://countrycode.org/>`_.
         :type country_code: str
         :param spam_name: The spam name that you want to give to the spammer.
         :type spam_name: str

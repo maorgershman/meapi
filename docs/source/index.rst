@@ -7,10 +7,7 @@ meapi: Unofficial api for 'Me - Caller ID & Spam Blocker'
 ==================================================
 
 
-
-
-
-For a **complete documentation** of available functions, see the :doc:`Reference <reference>`.
+.. include:: ../../README.rst
 
 Contents
 --------
@@ -23,6 +20,5 @@ Contents
 .. toctree::
 
    setup
-   usage
    reference
-   faq
+   examples

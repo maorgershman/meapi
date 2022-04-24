@@ -1,3 +1,7 @@
+.. image:: https://user-images.githubusercontent.com/42866208/164971421-c1f96d70-5cd8-4142-ae8d-16a7af11635b.png
+  :width: 95
+  :alt: Alternative text
+
 meapi: Unofficial api for 'Me - Caller ID & Spam Blocker'
 #########################################################
 
@@ -12,27 +16,33 @@ meapi: Unofficial api for 'Me - Caller ID & Spam Blocker'
 
 
 **This README is not finished and still in the middle of writing.**
-_________________________________________________________________
+___________________________________________________________________
 
 meapi is a Python3 library to identify phone numbers, report spam, get socials and more.
 
-.. features
+🔐 To **get started**, read the `Authentication instructions <https://meapi.readthedocs.io/en/latest/setup.html>`_.
 
-Features
+📖 For a **complete documentation** of available functions, see the `Reference <https://meapi.readthedocs.io/en/latest/reference.html>`_.
+
+
+Features 🎉
 --------
 | **Searching**:
 
 * Search phone numbers
-* Get user full profile
-* Know if is spammer
+* Get user full profile: pictures, birthdays, locations, socials and more
+* Spam indication
 
 | **Social**:
 
+* How people call me
 * Get and manage user comments
-* Get notificatioms
+* See who watched your profile
+* See who deleted you from his contacts book
+* Get notifications
 
 
-Usage
+Usage 👨‍💻
 ------
 .. code-block:: python
 
@@ -54,23 +64,22 @@ Usage
     print(me.who_deleted())
     print(me.get_notifications())
 
-.. end-features
 
-Requirements
-==============
+Requirements 💾
+---------------
 
 - Python 3.6 or higher - https://www.python.org
 
-Setup and Usage
-===============
+Setup and Usage 📖
+------------------
 
 See the `Documentation <https://meapi.readthedocs.io/>`_ for detailed instructions
 
-Contributing
-==============
+Contributing 🙏
+---------------
 
 Pull requests are welcome. There are still some features that are not yet implemented.
 
-Disclaimer
-==============
+Disclaimer ⛔️
+------------
 This application is intended for educational purposes only. Any use in professional manner or to harm anyone or any organization doesn't relate to me and can be considered as illegal.
