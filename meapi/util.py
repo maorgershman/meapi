@@ -60,9 +60,10 @@ class Util:
             elif req_type == 'patch':
                 response = patch(url=url, json=body, headers=headers, proxies=self.proxies)
             response_text = loads(response.text)
-            if response.status_code == 403:
+            if response.status_code == 403 and self.phone_number:
                 self.generate_access_token()
                 continue
+
             if response.status_code >= 400:
                 raise MeApiException(response.status_code, response_text, response.reason)
             return response_text
