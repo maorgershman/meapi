@@ -60,10 +60,15 @@ class Auth:
         body = {"phone_number": str(self.phone_number),
                 "pwd_token": auth_data['pwd_token']}
         print("Generating new access token...")
-        auth_data = self.make_request(req_type='post', endpoint='/auth/authorization/login/', body=body, auth=False)
+        try:
+            auth_data = self.make_request(req_type='post', endpoint='/auth/authorization/login/', body=body, auth=False)
+        except MeApiException as err:
+            if err.http_status == 400 and err.msg['detail'] == 'api_incorrect_pwd_token':
+                print(f"** Your pwd_token in {self.config_file} is broken. Continue to account activation...\n")
+                self.activate_account()
         access_token = auth_data['access']
         if access_token:
-            print("Verification completed.")
+            print("Success to generate new token.")
             self.access_token = access_token
             self.credentials_manager(auth_data)
             return True
