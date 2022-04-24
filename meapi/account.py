@@ -1,6 +1,8 @@
 from re import match
 from typing import Union, List, Tuple
 from meapi.exceptions import MeException, MeApiException
+from meapi.random_data import get_random_data
+from random import randint
 
 
 def get_contacts(contacts: List[dict]) -> List[dict]:
@@ -33,12 +35,12 @@ def get_calls(calls: List[dict]) -> List[dict]:
             if call.get('type') not in ['incoming', 'missed', 'outgoing']:
                 raise MeException("No such call type as " + str(call.get('type')) + "!")
             if not call.get('duration'):
-                call['duration'] = 123
+                call['duration'] = randint(10, 300)
             if not call.get('tag'):
                 call['tag'] = None
             if not call.get('called_at'):
-                call['called_at'] = '2022-04-18T05:59:07Z'
-                calls_list.append(call)
+                call['called_at'] = f"{randint(2018, 2022)}-{randint(1, 12)}-{randint(1, 31)}T{randint(1, 23)}:{randint(10, 59)}:{randint(10, 59)}Z"
+            calls_list.append(call)
     if not calls_list:
         raise MeException("Valid calls not found! check this example for valid call syntax: "
                           "https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-calls_log-py")
@@ -284,8 +286,9 @@ class Account:
         """
         Get user's uuid (To use in :py:func:`get_profile_info`, :py:func:`get_comments` and more).
 
-        :param phone_number: If none, return self uuid
-        :return: String of uuid, or None if no user on the provided phone number.
+        :param phone_number: International phone number format. Default: None (Return self uuid).
+        :type phone_number: Union[str, int, None]
+        :return: String of uuid, or None if no user exists on the provided phone number.
         :rtype: Union[str, None]
         """
         if phone_number:
@@ -557,7 +560,7 @@ class Account:
                 },
             ]
         """
-        body = {"add": self.calls(calls), "remove": []}
+        body = {"add": get_calls(calls), "remove": []}
         return self.make_request('post', '/main/call-log/change-sync/', body)
 
     def remove_calls_from_log(self, calls: List[dict]):
@@ -598,7 +601,7 @@ class Account:
                 },
             ]
         """
-        body = {"add": [], "remove": self.calls(calls)}
+        body = {"add": [], "remove": get_calls(calls)}
         return self.make_request('post', '/main/call-log/change-sync/', body)
 
     def block_profile(self, phone_number: Union[str, int], block_contact=True, me_full_block=True) -> bool:
@@ -649,7 +652,7 @@ class Account:
         body = {"phone_numbers": numbers}
         return self.make_request('post', '/main/users/profile/bulk-block/', body)['block_contact']
 
-    def unblock_numbers(self, numbers: Union[int, List[int]] = None) -> bool:
+    def unblock_numbers(self, numbers: Union[int, List[int]]) -> bool:
         """
         Unblock numbers.
 
@@ -688,28 +691,23 @@ class Account:
         body = {"location_latitude": float(lat), "location_longitude": float(lon)}
         return self.make_request('post', '/main/location/update/', body)['success']
 
-    def upload_sample_data(self, location=True, contacts=True, calls=True) -> bool:
+    def upload_random_data(self, contacts=True, calls=True, location=True):
         """
         Upload random data to your account.
 
-        :param location: To upload random location data. Default: ``True``.
-        :type location: bool
         :param contacts: To upload random contacts data. Default: ``True``.
         :type contacts: bool
         :param calls: To upload random calls data. Default: ``True``.
         :type calls: bool
+        :param location: To upload random location data. Default: ``True``.
+        :type location: bool
         :return: Is uploading success.
         :rtype: bool
         """
-        try:
-            from sample_data import calls_log, contacts, location_coordinates
-        except ImportError:
-            raise Exception("Sample data file is missing.")
-        if location:
-            self.update_location(*location_coordinates.values())
+        random_data = get_random_data(contacts, calls, location)
         if contacts:
-            self.add_contacts(contacts)
+            self.add_contacts(random_data['contacts'])
         if calls:
-            self.add_calls_to_log(calls_log)
-
-        # TODO return bool
+            self.add_calls_to_log(random_data['calls'])
+        if location:
+            self.update_location(random_data['location']['lat'], random_data['location']['lon'])
