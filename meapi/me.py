@@ -16,7 +16,7 @@ class Me(Auth, Account, Social, Settings, Notifications, Util):
                  proxies: dict = None):
 
         if not config_file or not config_file.endswith(".json"):
-            self.config_file = path.dirname(path.realpath(__file__)) + sep + 'config.json'
+            self.config_file = 'config.json'
         else:
             self.config_file = config_file
 

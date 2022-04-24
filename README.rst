@@ -9,14 +9,13 @@
     :alt: PyPI Downloads
     :target: https://pypi.org/project/meapi/
 
-
 .. image:: https://www.codefactor.io/repository/github/david-lev/meapi/badge/main
    :target: https://www.codefactor.io/repository/github/david-lev/meapi/overview/main
    :alt: CodeFactor
 
 .. image:: https://readthedocs.org/projects/meapi/badge/?version=latest&style=flat-square
    :target: https://meapi.readthedocs.io
-   :alt: CodeFactor
+   :alt: Docs
 
 .. image:: https://badges.aleen42.com/src/telegram.svg
    :target: https://t.me/me_api
