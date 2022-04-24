@@ -9,6 +9,7 @@ class Settings:
 
         :return: Dict with settings.
         :rtype: dict
+
         Example::
 
             {

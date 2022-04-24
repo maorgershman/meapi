@@ -56,6 +56,7 @@ class Notifications:
         :type location_filter: bool
         :return: Dict with notifications
         :rtype: dict
+
         Example::
 
             {

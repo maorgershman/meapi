@@ -16,7 +16,7 @@ class Auth:
         :rtype: bool
         """
         print(f"To get access token you need to authorize yourself:"
-              f"\n* Telegram: {tg_auth_url.format(self.phone_number)}\n* WhatsApp: {wa_auth_url}\n")
+              f"\n* WhatsApp (Recommended): {wa_auth_url}\n* Telegram: {tg_auth_url.format(self.phone_number)}\n")
         activation_code = None
         access_token = None
         while not activation_code:
@@ -29,7 +29,7 @@ class Auth:
             "phone_number": int(self.phone_number)
         }
         try:
-            print("** Trying to authorize...")
+            print("** Trying to verify...")
             results = self.make_request(req_type='post', endpoint='/auth/authorization/activate/', body=data, auth=False)
             if results['access']:
                 access_token = results['access']

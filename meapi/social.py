@@ -59,6 +59,7 @@ class Social:
 
         :return: list of dicts
         :rtype: List[dict]
+
         Example::
 
             [
@@ -90,6 +91,7 @@ class Social:
 
         :return: list of dicts
         :rtype: List[dict]
+
         Example::
 
             [
@@ -123,6 +125,7 @@ class Social:
         :type uuid: str
         :return: Dict with list of comments.
         :rtype: Dict[list]
+
         Example::
 
             {
@@ -189,6 +192,7 @@ class Social:
         :type comment_id: Union[int, str]
         :return: Dict with comment details.
         :rtype: dict
+
         Example::
 
             {
@@ -271,6 +275,7 @@ class Social:
 
         :return: Dict with groups.
         :rtype: dict
+
         Example::
 
             {
@@ -309,6 +314,7 @@ class Social:
 
         :return: dict with names and contact ids.
         :rtype: dict
+
         Example::
 
             {
@@ -392,6 +398,7 @@ class Social:
         :type uuid: str
         :return: Dict with social networks and posts.
         :rtype: dict
+
         Example::
 
             {

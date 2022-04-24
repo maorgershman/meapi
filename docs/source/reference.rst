@@ -15,7 +15,7 @@ Search
 .. automethod:: Me.get_uuid
 
 Account
-------
+-------
 
 .. automethod:: Me.update_profile_info
 .. automethod:: Me.add_contacts

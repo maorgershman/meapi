@@ -309,6 +309,9 @@ class Account:
                 results = self.update_profile_info(first_name=first_name, last_name=last_name, email=email,
                                                    login_type='email')
                 if results[0]:
+                    print("** Your profile successfully created, But you may not be able to perform searches for a "
+                          "few hours. \nIt my help to upload some data. You can use in me.upload_random_data() or "
+                          "other account methods to activate your account.")
                     return self.get_uuid()
                 raise MeException("Can't update the following details: " + ", ".join(results[1]))
             else:
@@ -527,7 +530,7 @@ class Account:
         Add call to your calls log.
 
         :param calls: List of dicts with calls data.
-        :type calls List[dict]
+        :type calls: List[dict]
         :return: dict with upload result.
         :rtype: dict
 
@@ -568,7 +571,7 @@ class Account:
         Remove calls from your calls log.
 
         :param calls: List of dicts with calls data.
-        :type calls List[dict]
+        :type calls: List[dict]
         :return: dict with upload result.
         :rtype: dict
 
