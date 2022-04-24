@@ -15,13 +15,14 @@ Unofficial method
 ^^^^^^^^^^^^^^^^^
 **important notes:**
 
+    - **This method is for educational purposes only and its use is at your own risk.** See `disclaimer <https://meapi.readthedocs.io/en/latest/index.html#disclaimer>`_
     - In this method you are going to verify as a user of the app and get a token with access to all the actions that the app provides.
-    - **This method is for educational purposes only and its use is at your own risk.**
-    - For app users there is an Rate-limit of about 350 searches per day.
+    - After verification, if you are connected to another device, you will be disconnected automatically.
+    - For app users there is an Rate-limit of about ``350`` searches per day.
 
 **Verification:**
 
-- Run this code
+- Run this code:
 
 .. code-block:: python
 
@@ -33,21 +34,24 @@ Unofficial method
 ::
 
     To get access token you need to authorize yourself:
-    * Telegram: http://t.me/Meofficialbot?start=__iw__XXXXXXXXXX // Your phone number instead of the XXXXX
-    * WhatsApp: https://wa.me/972543229534?text=Connectme
+    * WhatsApp (Recommended): https://wa.me/972543229534?text=Connectme
+    * Telegram: http://t.me/Meofficialbot?start=__iw__XXXXXXXXXX // Your phone number instead of the 'XXXXX'
 
     ** Enter your verification code (6 digits):
 
 - Go into `WhatsApp <https://wa.me/972543229534?text=Connectme>`_ (+972543229534) and send any message to this number.
 - You can also verify by Me Telegram bot (Only if you have Telegram account on this number!) and get verification code of 6 digits.
 - Enter the code in the terminal and you will see if the verification was successful.
+
 ::
 
     ** Enter your verification code (6 digits): 123456 // Enter
 
     ** Trying to authorize...
     Verification completed.
+
 - If this is a new number that is not already open an account, you will be required to fill in some details like name and email in order to create an account.
+- If you keep getting ``404`` error, you may want to run the `upload_random_data() <https://meapi.readthedocs.io/en/latest/reference.html#meapi.Me.upload_random_data>`_ function, in order to activate the account.
 
 **Credentials:**
 
@@ -69,12 +73,13 @@ Official method
 
 - You can also use the official verification and verify directly with an access token.
     Me has an official API which can be accessed by submitting a formal request at `this <https://meapp.co.il/api/>`_. link (Probably paid).
-    I guess you get a KEY API with which you can get an access token similar to the app.
+    I guess you get a API KEY with which you can get an access token similar to the app.
     But I do not know what the scope of this token are and whether it is possible to contact with it the same endpoints that the official app addresses.
 - If anyone can shed light on the official authentication method, I would be happy if he would `contact me <https://t.me/davidlev>`_. so that I could better support it and exclude or add certain functions.
 - If you have an access token and you are interested in connecting with it - do the following:
+
 .. code-block:: python
 
     from meapi import Me
-    me = Me(access_token=XXXXXXXXXXXXXXXXXXXXXX) # Enter your access token
+    me = Me(access_token='XXXXXXXXXX') # Enter your access token
 
