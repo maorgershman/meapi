@@ -6,3 +6,4 @@ config.json
 dist
 meapi.egg-info
 docs/build
+build
