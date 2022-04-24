@@ -24,10 +24,10 @@ ___________________________________________________________________
 
 📖 For a **complete documentation** of available functions, see the `Reference <https://meapi.readthedocs.io/en/latest/reference.html>`_.
 
-Installation:
+Installation 🎛
 -------------
 
-Install using pip:
+Install using pip3:
 ^^^^^^^^^^^^^^^^^
 .. code-block:: bash
 
