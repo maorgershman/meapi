@@ -278,16 +278,19 @@ class Account:
             return self.make_request('get', '/main/users/profile/' + str(uuid))
         return self.make_request('get', '/main/users/profile/me/')
 
-    def get_uuid(self, phone_number: Union[int, str] = None) -> str:
+    def get_uuid(self, phone_number: Union[int, str] = None) -> Union[str, None]:
         """
         Get user's uuid (To use in :py:func:`get_profile_info`, :py:func:`get_comments` and more).
 
         :param phone_number: If none, return self uuid
-        :return: String of uuid
-        :rtype: str
+        :return: String of uuid, or None if no user on the provided phone number.
+        :rtype: Union[str, None]
         """
         if phone_number:
-            return self.phone_search(phone_number).get('contact').get('user').get('uuid')
+            res = self.phone_search(phone_number).get('contact').get('user')
+            if res:
+                return res.get('uuid')
+            return None
         try:
             return self.get_profile_info()['uuid']
         except MeApiException as err:
@@ -302,8 +305,7 @@ class Account:
                                                    login_type='email')
                 if results[0]:
                     return self.get_uuid()
-                else:
-                    raise MeException("Can't update the following details: " + ", ".join(results[1]))
+                raise MeException("Can't update the following details: " + ", ".join(results[1]))
             else:
                 raise err
 

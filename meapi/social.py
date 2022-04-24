@@ -501,8 +501,7 @@ class Social:
         """
         if not uuid:
             return self.make_request('get', '/main/social/update/')
-        else:
-            return self.extra_info(str(uuid))['social']
+        return self.extra_info(str(uuid))['social']
 
     def add_social(self,
                    twitter_token: str = None,
@@ -681,8 +680,7 @@ class Social:
         if match(r"^\d{4}(\-)([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))$", str(date_of_birth)):
             days_in_year = 365.2425
             return round((date.today() - datetime.strptime(date_of_birth, "%Y-%m-%d").date()).days / days_in_year, 1)
-        else:
-            return 0.0
+        return 0.0
 
     def is_spammer(self, phone_number: Union[int, str]) -> int:
         """
@@ -696,5 +694,4 @@ class Social:
         results = self.phone_search(phone_number)
         if results:
             return results['contact']['suggested_as_spam']
-        else:
-            return 0
+        return 0
