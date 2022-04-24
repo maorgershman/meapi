@@ -69,5 +69,3 @@ Settings
 .. automethod:: Me.get_settings
 .. automethod:: Me.change_social_settings
 .. automethod:: Me.change_notification_settings
-
-

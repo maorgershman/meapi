@@ -55,6 +55,7 @@ class Account:
         :type phone_number: Union[str, int])
         :return: Dict with information about the phone number.
         :rtype: dict
+
         Example for existed user::
 
             {
@@ -124,7 +125,8 @@ class Account:
         :param uuid: uuid of the Me user. Default: your uuid.
         :type uuid: str
         :return: Dict with profile details
-        :rtype: dict
+        :rtype:
+
         Example::
 
             {
@@ -419,7 +421,8 @@ class Account:
         :type contacts: List[dict])
         :return: Dict with upload results.
         :rtype: dict
-        Example::
+
+        Example of list of contacts to add::
 
             [
                 {
@@ -471,7 +474,8 @@ class Account:
         :type contacts: List[dict])
         :return: Dict with upload results.
         :rtype: dict
-        Example::
+
+        Example of list of contacts to remove::
 
             [
                 {
@@ -523,7 +527,8 @@ class Account:
         :type calls List[dict]
         :return: dict with upload result.
         :rtype: dict
-        Example::
+
+        Example of list of calls to add::
 
             [
                 {
@@ -563,7 +568,8 @@ class Account:
         :type calls List[dict]
         :return: dict with upload result.
         :rtype: dict
-        Example::
+
+        Example of list of calls to remove::
 
             [
                 {

@@ -3,14 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-meapi: Unofficial api for 'Me - Caller ID & Spam Blocker'
-==================================================
-
-
 .. include:: ../../README.rst
 
-Contents
---------
+🔗 **Contents**
+---------------
 
 .. toctree::
    :hidden:

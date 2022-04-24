@@ -15,7 +15,8 @@ class Social:
         :type phone_number: Union[int, str]
         :return: Dict with friendship data.
         :rtype: dict
-        Example::
+
+        Example of friendship::
 
             {
                 "calls_duration": None,
