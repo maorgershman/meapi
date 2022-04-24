@@ -40,7 +40,7 @@ ________________________
 
 .. code-block:: bash
 
-    pip3 install meapi
+    pip3 install -U meapi
 
 - **Install from source:**
 
