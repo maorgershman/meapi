@@ -17,6 +17,7 @@ setup(
     version=version,
     description="Unofficial api for 'Me - Caller ID & Spam Blocker' app",
     long_description=(open('README.rst').read()),
+    long_description_content_type="text/x-rst",
     author_email='davidlev@telegmail.com',
     url='https://meapi.readthedocs.io',
     author='David lev',
