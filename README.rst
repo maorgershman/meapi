@@ -18,32 +18,50 @@ meapi: Unofficial api for 'Me - Caller ID & Spam Blocker'
 **This README is not finished and still in the middle of writing.**
 ___________________________________________________________________
 
-meapi is a Python3 library to identify phone numbers, report spam, get socials and more.
+📞 meapi is a Python3 library to identify and get information about phone numbers, indicate and report spam, get socials and more.
 
 🔐 To **get started**, read the `Authentication instructions <https://meapi.readthedocs.io/en/latest/setup.html>`_.
 
 📖 For a **complete documentation** of available functions, see the `Reference <https://meapi.readthedocs.io/en/latest/reference.html>`_.
 
+Installation:
+-------------
+
+Install using pip:
+^^^^^^^^^^^^^^^^^
+.. code-block:: bash
+
+    pip3 install meapi
+
+Install from source:
+^^^^^^^^^^^^^^^^^^^^
+.. code-block:: bash
+
+    git clone https://github.com/david-lev/meapi.git
+    cd meapi && python3 setup.py install
+
 
 Features 🎉
---------
-| **Searching**:
+----------
+| **Searching:**
 
 * Search phone numbers
 * Get user full profile: pictures, birthdays, locations, socials and more
 * Spam indication
+* ...
 
-| **Social**:
+| **Social:**
 
 * How people call me
 * Get and manage user comments
 * See who watched your profile
 * See who deleted you from his contacts book
 * Get notifications
+* ...
 
 
 Usage 👨‍💻
-------
+----------
 .. code-block:: python
 
     from meapi import Me
