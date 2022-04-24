@@ -119,7 +119,7 @@ class Social:
         """
         Get user comments.
 
-        :param uuid: User uuid. (See :py:func:`get_uuid`). Default: Your uuid.
+        :param uuid: User uuid. See :py:func:`get_uuid`. Default: Your uuid.
         :type uuid: str
         :return: Dict with list of comments.
         :rtype: Dict[list]
@@ -178,7 +178,7 @@ class Social:
             if self.phone_number:
                 uuid = self.uuid
             else:
-                raise MeException("In access token mode you must to provide user uuid.")
+                raise MeException("In https://meapi.readthedocs.io/en/latest/setup.html#unofficial-method mode you must to provide user uuid.")
         return self.make_request('get', '/main/comments/list/' + uuid)
 
     def get_comment(self, comment_id: Union[int, str]) -> dict:
@@ -344,7 +344,7 @@ class Social:
         """
         Delete group name (You can also ask for rename with :py:func:`ask_group_rename`. and you can restore deleted group with :py:func:`restore_name`).
 
-        :param contacts_ids: Single or list of contact ids from the same group (See :py:func:`get_groups_names`).
+        :param contacts_ids: Single or list of contact ids from the same group. See :py:func:`get_groups_names`.
         :type contacts_ids: Union[int, str, List[Union[int, str]]]
         :return: Is delete success.
         :rtype: bool
@@ -358,7 +358,7 @@ class Social:
         """
         Restore deleted group name from :py:func:`get_deleted_names`.
 
-        :param contacts_ids: Single or list of contact ids from the same deleted group (See :py:func:`get_groups_names`).
+        :param contacts_ids: Single or list of contact ids from the same deleted group. See :py:func:`get_groups_names`.
         :type contacts_ids: Union[int, str, List[Union[int, str]]]
         :return: Is restoring success.
         :rtype: bool
@@ -372,7 +372,7 @@ class Social:
         """
         Suggest new name to group of people and ask them to rename you in their contacts book.
 
-        :param contacts_ids: Single or list of contact ids from the same group (See :py:func:`get_groups_names`).
+        :param contacts_ids: Single or list of contact ids from the same group. See :py:func:`get_groups_names`.
         :type contacts_ids: Union[int, str, List[Union[int, str]]]
         :param new_name: Suggested name
         :type new_name: str
@@ -388,7 +388,7 @@ class Social:
         """
         Get connected social networks to Me account.
 
-        :param uuid: User uuid. (See :py:func:`get_uuid`). Default: Your uuid.
+        :param uuid: User uuid. See :py:func:`get_uuid`. Default: Your uuid.
         :type uuid: str
         :return: Dict with social networks and posts.
         :rtype: dict
@@ -567,7 +567,7 @@ class Social:
                       linkedin: bool = False,
                       ) -> bool:
         """
-        Remove social networks from your profile.
+        Remove social networks from your profile. You can also hide social instead of deleting it: :py:func:`switch_social_status`.
 
         :param twitter: To remove Twitter. Default: False
         :type twitter: bool
@@ -607,13 +607,20 @@ class Social:
         """
         Switch social network status: hide or show.
 
-        :param twitter:
-        :param spotify:
-        :param instagram:
-        :param facebook:
-        :param pinterest:
-        :param linkedin:
+        :param twitter: Switch Twitter status. Default: None.
+        :type twitter: bool
+        :param spotify: Switch Spotify status Default: None.
+        :type spotify: bool
+        :param instagram: Switch Instagram status Default: None.
+        :type instagram: bool
+        :param facebook: Switch Facebook status Default: None.
+        :type facebook: bool
+        :param pinterest: Switch Pinterest status Default: None.
+        :type pinterest: bool
+        :param linkedin: Switch Linkedin status Default: None.
+        :type linkedin: bool
         :return: is switch success (you get true even if social won't set before)
+        :rtype: bool
         """
         args = locals()
         not_null_values = sum(bool(i) for i in args.values() if i is not None)
@@ -648,7 +655,7 @@ class Social:
         """
         Ask another user to turn on comments in his profile.
 
-        :param uuid: User uuid (See :py:func:`get_uuid`).
+        :param uuid: User uuid. See :py:func:`get_uuid`.
         :type uuid: str
         :return: Is request success.
         :rtype: bool
@@ -660,7 +667,7 @@ class Social:
         """
         Ask another user to turn on mutual contacts on his profile.
 
-        :param uuid: User uuid. (See :py:func:`get_uuid`). Default: Your uuid.
+        :param uuid: User uuid. See :py:func:`get_uuid`. Default: Your uuid.
         :type uuid: str
         :return: Is request success.
         :rtype: bool
@@ -670,8 +677,9 @@ class Social:
 
     def get_age(self, uuid=None) -> float:
         """
-        Get user age (calculate from date_of_birth, provided by :py:func:`get_profile_info`).
-        :param uuid: User uuid. (See :py:func:`get_uuid`). Default: Your uuid.
+        Get user age. calculate from ``date_of_birth``, provided by :py:func:`get_profile_info`.
+
+        :param uuid: User uuid. See :py:func:`get_uuid`. Default: Your uuid.
         :type uuid: str
         :return: User age if date of birth exists. else - 0.0
         :rtype: float
