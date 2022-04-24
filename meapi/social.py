@@ -175,7 +175,10 @@ class Social:
             }
         """
         if not uuid:
-            uuid = self.uuid
+            if self.phone_number:
+                uuid = self.uuid
+            else:
+                raise MeException("In access token mode you must to provide user uuid.")
         return self.make_request('get', '/main/comments/list/' + uuid)
 
     def get_comment(self, comment_id: Union[int, str]) -> dict:
