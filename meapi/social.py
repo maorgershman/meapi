@@ -390,7 +390,7 @@ class Social:
         body = {"contact_ids": [int(_id) for _id in contacts_ids], "name": new_name}
         return self.make_request('post', '/main/names/suggestion/', body)['success']
 
-    def get_socials(self, uuid: None) -> dict:
+    def get_socials(self, uuid: str = None) -> dict:
         """
         Get connected social networks to Me account.
 
@@ -503,7 +503,7 @@ class Social:
             }
         """
         if not uuid:
-            return self.make_request('get', '/main/social/update/')
+            return self.make_request('post', '/main/social/update/')
         return self.extra_info(str(uuid))['social']
 
     def add_social(self,
@@ -520,9 +520,9 @@ class Social:
 
         :param twitter_token: `Twitter Token <https://gist.github.com/david-lev/b158f1cc0cc783dbb13ff4b54416ceec#file-twitter_token-md>`_. Default = None.
         :type twitter_token: str
-        :param spotify_token: `Spotify token <https://accounts.spotify.com/authorize?client_id=0b1ea72f7dce420583038b49fd04be50&response_type=code&redirect_uri=https://app.mobile.me.app/&scope=user-read-email%20playlist-read-private>`_. Default = None.
+        :param spotify_token: `Log in <https://accounts.spotify.com/authorize?client_id=0b1ea72f7dce420583038b49fd04be50&response_type=code&redirect_uri=https://app.mobile.me.app/&scope=user-read-email%20playlist-read-private>`_ and copy the token after the ``https://app.mobile.me.app/?code=``. Default = None.
         :type spotify_token: str
-        :param instagram_token: `Instagram token <https://api.instagram.com/oauth/authorize/?app_id=195953705182737&redirect_uri=https://app.mobile.me.app/&response_type=code&scope=user_profile,user_media>`_. Default = None.
+        :param instagram_token: `Log in <https://api.instagram.com/oauth/authorize/?app_id=195953705182737&redirect_uri=https://app.mobile.me.app/&response_type=code&scope=user_profile,user_media>`_ and copy the token after the ``https://app.mobile.me.app/?code=``. Default = None.
         :type instagram_token: str
         :param facebook_token: `Facebook token <https://facebook.com/v12.0/dialog/oauth?cct_prefetching=0&client_id=799397013456724>`_. Default = None.
         :type facebook_token: str
@@ -534,7 +534,8 @@ class Social:
         :rtype: Tuple[bool, List[str]]
         """
         args = locals()
-        if sum(bool(i) for i in args.values()) < 2:  # self also true
+        del args['self']
+        if sum(bool(i) for i in args.values()) < 1:
             raise MeException("You need to provide at least one social!")
         failed = []
         for social, token_or_url in args.items():
@@ -545,7 +546,7 @@ class Social:
                         endpoint = 'update-url'
                         is_token = False
                     else:
-                        raise MeException(f"{social.replace('_url', '').capitalize()} accepted profile url!")
+                        raise MeException(f"You must provide a valid link to the {social.replace('_url', '').capitalize()} profile!")
                 else:
                     field_name = 'code_first'
                     endpoint = 'save-auth-token'
@@ -584,8 +585,9 @@ class Social:
         :rtype: bool
         """
         args = locals()
+        del args['self']
         true_values = sum(bool(i) for i in args.values())
-        if true_values < 2:  # self also true
+        if true_values < 1:
             raise MeException("You need to remove at least one social!")
         successes = 0
         for social, value in args.items():
@@ -593,7 +595,7 @@ class Social:
                 body = {"social_name": str(social)}
                 if self.make_request('post', '/main/social/delete/', body).get('success'):
                     successes += 1
-        return bool(true_values - 1 == successes)
+        return bool(true_values == successes)
 
     def switch_social_status(self,
                              twitter: bool = None,
@@ -622,24 +624,21 @@ class Social:
         :rtype: bool
         """
         args = locals()
-        not_null_values = sum(bool(i) for i in args.values() if i is not None)
-        if not_null_values < 2:  # self also true
-            raise MeException("You need to switch at least one social!")
+        del args['self']
+        not_null_values = sum(bool(i) for i in args.values() if i is not None) or sum(not bool(i) for i in args.values() if i is not None)
+        if not_null_values < 1:
+            raise MeException("You need to switch status to at least one social!")
         successes = 0
         for social, status in args.items():
             if status is not None and isinstance(status, bool):
                 body = {"social_name": str(social)}
-                try:
-                    new_status = bool(not self.make_request('post', '/main/social/hide/', body)['is_hidden'])
-                except MeApiException as err:
-                    if err.status_http == 400 and err.msg['detail'] == 'api_token_does_not_exists':
-                        new_status = status
-                    else:
-                        raise err
-                if status == new_status:
-                    successes += 1
+                current_status = self.get_socials()
+                if status == current_status[social]['is_hidden'] and current_status[social]['is_active']:  # exists but status not as the required
+                    new_status = not bool(self.make_request('post', '/main/social/hide/', body)['is_hidden'])
+                    if status == new_status:
+                        successes += 1
 
-        return bool(not_null_values - 1 == successes)
+        return bool(not_null_values == successes)
 
     def numbers_count(self) -> int:
         """
