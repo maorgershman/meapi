@@ -64,8 +64,12 @@ class Auth:
             auth_data = self.make_request(req_type='post', endpoint='/auth/authorization/login/', body=body, auth=False)
         except MeApiException as err:
             if err.http_status == 400 and err.msg['detail'] == 'api_incorrect_pwd_token':
-                print(f"** Your pwd_token in {self.config_file} is broken. Continue to account activation...\n")
-                self.activate_account()
+                print(f"** Your pwd_token in {self.config_file} is broken (You probably activated the account "
+                      f"elsewhere). \n** Continuing to account activation...\n")
+                if self.activate_account():
+                    return True
+            else:
+                raise err
         access_token = auth_data['access']
         if access_token:
             print("Success to generate new token.")
@@ -100,16 +104,18 @@ class Auth:
         else:
             if not data.get('access') or not data.get('refresh'):
                 raise MeException(f"Wrong data provided! {data}")
+
+            pwd_token = None
+            if existing_content:
+                if existing_content.get(str(self.phone_number)):
+                    pwd_token = existing_content.get(str(self.phone_number)).get('pwd_token')
+            uuid = self.get_uuid()
+            self.uuid = uuid
+            existing_content[str(self.phone_number)] = data
+            existing_content[str(self.phone_number)]['uuid'] = uuid
+            if pwd_token and not data.get('pwd_token'):
+                existing_content[str(self.phone_number)]['pwd_token'] = pwd_token
+
             with open(self.config_file, "w") as config_file:
-                pwd_token = None
-                if existing_content:
-                    if existing_content.get(str(self.phone_number)):
-                        pwd_token = existing_content.get(str(self.phone_number)).get('pwd_token')
-                uuid = self.get_uuid()
-                self.uuid = uuid
-                existing_content[str(self.phone_number)] = data
-                existing_content[str(self.phone_number)]['uuid'] = uuid
-                if pwd_token:
-                    existing_content[str(self.phone_number)]['pwd_token'] = pwd_token
                 dump(existing_content, config_file, indent=4, sort_keys=True)
             return existing_content[str(self.phone_number)]
