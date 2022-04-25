@@ -62,18 +62,18 @@ class Account:
 
             {
                 "contact": {
-                    "name": "David Lev",
+                    "name": "Chandler bing",
                     "picture": None,
                     "user": {
-                        "email": "davidlevXXXXXXXXX@gmail.com",
+                        "email": "user@domain.com",
                         "profile_picture": "https://d18zaexXXp1s.cloudfront.net/5XXX971XXXXXXXXXfa67.jpg",
-                        "first_name": "David",
-                        "last_name": "Lev",
+                        "first_name": "Chandler",
+                        "last_name": "Bing",
                         "gender": 'M',
                         "uuid": "XXXXX-XXXX-XXXX-XXXX-XXXX",
                         "is_verified": True,
                         "phone_number": 7434872457,
-                        "slogan": "https://davidlev.me",
+                        "slogan": "User bio",
                         "is_premium": False,
                         "verify_subscription": True,
                         "id": 42453345,
@@ -137,24 +137,43 @@ class Account:
                 "is_permanent": False,
                 "is_shared_location": False,
                 "last_comment": None,
-                "mutual_contacts": [],
-                "mutual_contacts_available": False,
+                "mutual_contacts_available": True,
+                "mutual_contacts": [
+                    {
+                        "phone_number": 1234567890,
+                        "name": "Ross geller",
+                        "referenced_user": {
+                            "email": "rossgeller@friends.com",
+                            "profile_picture": "https://d18zaexen4dp1s.cloudfront.net/59XXXXXXXXXXXXXXXX67.jpg",
+                            "first_name": "Ross",
+                            "last_name": "",
+                            "gender": 'M',
+                            "uuid": "XXXX-XXX-XXX-83c1-XXXX",
+                            "is_verified": True,
+                            "phone_number": 3432434546546,
+                            "slogan": "Pivot!",
+                            "is_premium": False,
+                            "verify_subscription": True,
+                        },
+                        "date_of_birth": '1980-03-13',
+                    }
+                ],
                 "profile": {
                     "carrier": "XXX mobile",
                     "comments_enabled": False,
                     "country_code": "XX",
-                    "date_of_birth": None,
+                    "date_of_birth": '2222-05-20',
                     "device_type": "android",
                     "distance": None,
-                    "email": "davidlevXXXXXXXX@gmail.com",
-                    "facebook_url": "",
-                    "first_name": "David",
+                    "email": "user@domain.com",
+                    "facebook_url": "133268763438473",
+                    "first_name": "Chandler",
                     "gdpr_consent": True,
-                    "gender": None,
+                    "gender": 'M',
                     "google_url": None,
                     "is_premium": False,
                     "is_verified": True,
-                    "last_name": "Lev",
+                    "last_name": "Bing",
                     "location_enabled": False,
                     "location_name": "XXXX",
                     "login_type": "email",
@@ -162,20 +181,20 @@ class Account:
                     "phone_number": 123456789012,
                     "phone_prefix": "123",
                     "profile_picture": "https://d18zaexen4dp1s.cloudfront.net/5XXX712a0676XXXXXXXfa67.jpg",
-                    "slogan": "https://davidlev.me",
+                    "slogan": "I will always be there for you",
                     "user_type": "BLUE",
                     "uuid": "XXXXXXXXXXXXXXXXXXX3c1-6932bc9eb597",
                     "verify_subscription": True,
-                    "who_deleted_enabled": False,
-                    "who_watched_enabled": False,
+                    "who_deleted_enabled": True,
+                    "who_watched_enabled": True,
                 },
                 "share_location": False,
                 "social": {
                     "facebook": {
-                        "is_active": False,
-                        "is_hidden": True,
                         "posts": [],
-                        "profile_id": None,
+                        "profile_id": "https://www.facebook.com/app_scoped_user_id/XXXXXXXXXXX/",
+                        "is_active": True,
+                        "is_hidden": True,
                     },
                     "fakebook": {
                         "is_active": False,
@@ -184,56 +203,57 @@ class Account:
                         "profile_id": None,
                     },
                     "instagram": {
-                        "is_active": False,
-                        "is_hidden": True,
-                        "posts": [],
-                        "profile_id": None,
+                        "posts": [
+                            {
+                                "posted_at": "2021-12-23T22:21:06Z",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/XXXXXXXXXXXXXX.jpg",
+                                "text_first": None,
+                                "text_second": "IMAGE",
+                                "author": "username",
+                                "redirect_id": "CXXXXIz-0",
+                                "owner": "username",
+                            }
+                        ],
+                        "profile_id": "username",
+                        "is_active": True,
+                        "is_hidden": False,
                     },
                     "linkedin": {
-                        "is_active": False,
-                        "is_hidden": True,
+                        "is_active": True,
+                        "is_hidden": False,
                         "posts": [],
-                        "profile_id": None,
+                        "profile_id": "https://www.linkedin.com/in/username",
                     },
                     "pinterest": {
-                        "is_active": False,
-                        "is_hidden": True,
                         "posts": [],
-                        "profile_id": None,
+                        "profile_id": "https://pin.it/XXXXXXXX",
+                        "is_active": True,
+                        "is_hidden": False,
                     },
                     "spotify": {
-                        "is_active": False,
+                        "is_active": True,
                         "is_hidden": False,
                         "posts": [
                             {
-                                "author": "David Lev",
-                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
-                                "photo": "https://d18zaexen4dp1s.cloudfront.net/9bc7efa7d1059313a97b704b5fd4c3ac.jpg",
+                                "author": "Chandler bing",
+                                "owner": "4xgXXXXXXXt0pv",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/9bcXXXfa7dXXXXXXXac.jpg",
                                 "posted_at": None,
                                 "redirect_id": "4KgES5cs3SnMhuAXuBREW2",
-                                "text_first": "🇮🇱 ישראלי לנשמה 🇮🇱",
+                                "text_first": "My friends playlist songs",
                                 "text_second": "157",
                             },
                             {
-                                "author": "David Lev",
-                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
-                                "photo": "https://d18zaexen4dp1s.cloudfront.net/ecc6b4bf8cb67e2e6a2ae4fe2423819a.jpg",
+                                "author": "Chandler Bing",
+                                "owner": "4xgoXcoriuXXXXpt0pv",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/55d3XXXXXXXXXXXXXXXXXX4.jpg",
                                 "posted_at": None,
-                                "redirect_id": "4WWYBPI4PGH09sKmeagiXj",
-                                "text_first": "♻️ לועזי מקפיץ ♻️",
-                                "text_second": "1711",
-                            },
-                            {
-                                "author": "David Lev",
-                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
-                                "photo": "https://d18zaexen4dp1s.cloudfront.net/55d31900d3e3b3f9e726b9040bc5ddf4.jpg",
-                                "posted_at": None,
-                                "redirect_id": "3FjSlJSRNe0ohCQPB14i7t",
-                                "text_first": "⚜️ המועדפים שלי ⚜️",
+                                "redirect_id": "3FjSXXXCQPB14Xt",
+                                "text_first": "My favorite songs!",
                                 "text_second": "272",
                             },
                         ],
-                        "profile_id": "4xgot8coriuhr6ad9f29pt0pv",
+                        "profile_id": "4xgot8coriuXXXXXpt0pv",
                     },
                     "tiktok": {
                         "is_active": False,
@@ -246,34 +266,25 @@ class Account:
                         "is_hidden": False,
                         "posts": [
                             {
-                                "author": "RobotTrick",
-                                "owner": "RobotTrick",
-                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
+                                "author": "username",
+                                "owner": "username",
+                                "photo": "https://pbs.twimg.com/profile_images/13XXXXX76/AvBXXXX_normal.jpg",
                                 "posted_at": "2021-08-24T10:02:45Z",
-                                "redirect_id": "https://twitter.com/RobotTrick/status/1430108307247804423",
-                                "text_first": "📸 כך תתקינו את מצלמת Gcam של גוגל על מכשיר האנדרואיד שלכם! https://t.co/PLaQyiL2Tw https://t.co/zdyuDg8Rkk",
+                                "redirect_id": "https://twitter.com/username/status/1XXXXXX423",
+                                "text_first": "My tweet #1 https://t.co/PLXXXX2Tw https://t.co/zXXXXkk",
                                 "text_second": None,
                             },
                             {
-                                "author": "RobotTrick",
-                                "owner": "RobotTrick",
-                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
+                                "author": "username",
+                                "owner": "username",
+                                "photo": "https://pbs.twimg.com/profile_images/1318XXXX0976/AvBXXXUk_normal.jpg",
                                 "posted_at": "2021-08-12T10:09:23Z",
-                                "redirect_id": "https://twitter.com/RobotTrick/status/1425761322197786624",
-                                "text_first": "בוט חדש המאפשר ליצור קישור לצ'אט וואטסאפ עם הודעה כתובה מראש, כך שמי שילחץ עליו, יועבר לצ'אט עם טקסט שתגדירו מראש.https://t.co/xtqdtHttAC",
-                                "text_second": None,
-                            },
-                            {
-                                "author": "RobotTrick",
-                                "owner": "RobotTrick",
-                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
-                                "posted_at": "2021-08-09T10:21:31Z",
-                                "redirect_id": "https://twitter.com/RobotTrick/status/1424677213341986816",
-                                "text_first": "במדריך שלפניכם נתמקד בהרשאות רוט בסגנון קצת שונה ממה שהכרתם עד היום. אפליקציית Shizuku מאפשרת לכם לספק הרשאות גבוהו… https://t.co/TkubAyx0RH",
+                                "redirect_id": "https://twitter.com/username/status/142XXXXX86624",
+                                "text_first": "My second tweet https://t.co/xtqXXXtAC",
                                 "text_second": None,
                             },
                         ],
-                        "profile_id": "RobotTrick",
+                        "profile_id": "username",
                     },
                 },
             }
@@ -415,7 +426,9 @@ class Account:
     def suspend_account(self) -> bool:
         """
         Suspend your account until your next login.
+
         :return: is suspended.
+        :rtype: bool
         """
         return self.make_request('put', '/main/settings/suspend-user/')['contact_suspended']
 
@@ -649,6 +662,16 @@ class Account:
         :type numbers: Union[int, List[int]])
         :return: Is blocking success.
         :rtype: bool
+
+        Example::
+
+            [
+                {
+                    "block_contact": True,
+                    "me_full_block": False,
+                    "phone_number": 1234567890
+                }
+            ]
         """
         if not isinstance(numbers, list):
             numbers = [numbers]
@@ -675,6 +698,16 @@ class Account:
 
         :return: list of dicts.
         :rtype: List[dict]
+
+        Example::
+
+            [
+                {
+                    "block_contact": True,
+                    "me_full_block": False,
+                    "phone_number": 1234567890
+                }
+            ]
         """
         return self.make_request('get', '/main/settings/blocked-phone-numbers/')
 

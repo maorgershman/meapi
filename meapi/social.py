@@ -135,7 +135,7 @@ class Social:
                         "status": "approved",
                         "message": "Test comment",
                         "author": {
-                            "email": "XXXXXXXXX14@gmail.com",
+                            "email": "user@domain.com",
                             "profile_picture": "https://d18zaexen4dp1s.cloudfront.net/593a9XXXXXXd7437XXXX7.jpg",
                             "first_name": "Name test",
                             "last_name": "",
@@ -181,7 +181,7 @@ class Social:
             if self.phone_number:
                 uuid = self.uuid
             else:
-                raise MeException("In https://meapi.readthedocs.io/en/latest/setup.html#unofficial-method mode you must to provide user uuid.")
+                raise MeException("In https://meapi.readthedocs.io/en/latest/setup.html#official-method mode you must to provide user uuid.")
         return self.make_request('get', '/main/comments/list/' + uuid)
 
     def get_comment(self, comment_id: Union[int, str]) -> dict:
@@ -243,7 +243,7 @@ class Social:
         """
         return bool(self.make_request('delete', '/main/comments/approve/' + str(comment_id))['status'] == 'ignored')
 
-    def like_comment(self, comment_id: Union[int, str]) -> dict:
+    def like_comment(self, comment_id: Union[int, str]) -> bool:
         """
         Like comment.
 
@@ -252,7 +252,7 @@ class Social:
         :return: Is like success.
         :rtype: bool
         """
-        return self.make_request('post', '/main/comments/like/' + str(comment_id))
+        return self.make_request('post', '/main/comments/like/' + str(comment_id))['success']
 
     def publish_comment(self, uuid: str, comment: str) -> Union[int, bool]:
         """
@@ -404,10 +404,10 @@ class Social:
             {
                 "social": {
                     "facebook": {
-                        "is_active": False,
-                        "is_hidden": True,
                         "posts": [],
-                        "profile_id": None,
+                        "profile_id": "https://www.facebook.com/app_scoped_user_id/XXXXXXXXXXX/",
+                        "is_active": True,
+                        "is_hidden": True,
                     },
                     "fakebook": {
                         "is_active": False,
@@ -416,56 +416,57 @@ class Social:
                         "profile_id": None,
                     },
                     "instagram": {
-                        "is_active": False,
-                        "is_hidden": True,
-                        "posts": [],
-                        "profile_id": None,
+                        "posts": [
+                            {
+                                "posted_at": "2021-12-23T22:21:06Z",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/XXXXXXXXXXXXXX.jpg",
+                                "text_first": None,
+                                "text_second": "IMAGE",
+                                "author": "username",
+                                "redirect_id": "CXXXXIz-0",
+                                "owner": "username",
+                            }
+                        ],
+                        "profile_id": "username",
+                        "is_active": True,
+                        "is_hidden": False,
                     },
                     "linkedin": {
-                        "is_active": False,
-                        "is_hidden": True,
+                        "is_active": True,
+                        "is_hidden": False,
                         "posts": [],
-                        "profile_id": None,
+                        "profile_id": "https://www.linkedin.com/in/username",
                     },
                     "pinterest": {
-                        "is_active": False,
-                        "is_hidden": True,
                         "posts": [],
-                        "profile_id": None,
+                        "profile_id": "https://pin.it/XXXXXXXX",
+                        "is_active": True,
+                        "is_hidden": False,
                     },
                     "spotify": {
-                        "is_active": False,
+                        "is_active": True,
                         "is_hidden": False,
                         "posts": [
                             {
-                                "author": "David Lev",
-                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
-                                "photo": "https://d18zaexen4dp1s.cloudfront.net/9bc7efa7d1059313a97b704b5fd4c3ac.jpg",
+                                "author": "Chandler bing",
+                                "owner": "4xgXXXXXXXt0pv",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/9bcXXXfa7dXXXXXXXac.jpg",
                                 "posted_at": None,
                                 "redirect_id": "4KgES5cs3SnMhuAXuBREW2",
-                                "text_first": "🇮🇱 ישראלי לנשמה 🇮🇱",
+                                "text_first": "My friends playlist songs",
                                 "text_second": "157",
                             },
                             {
-                                "author": "David Lev",
-                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
-                                "photo": "https://d18zaexen4dp1s.cloudfront.net/ecc6b4bf8cb67e2e6a2ae4fe2423819a.jpg",
+                                "author": "Chandler Bing",
+                                "owner": "4xgoXcoriuXXXXpt0pv",
+                                "photo": "https://d18zaexen4dp1s.cloudfront.net/55d3XXXXXXXXXXXXXXXXXX4.jpg",
                                 "posted_at": None,
-                                "redirect_id": "4WWYBPI4PGH09sKmeagiXj",
-                                "text_first": "♻️ לועזי מקפיץ ♻️",
-                                "text_second": "1711",
-                            },
-                            {
-                                "author": "David Lev",
-                                "owner": "4xgot8coriuhr6ad9f29pt0pv",
-                                "photo": "https://d18zaexen4dp1s.cloudfront.net/55d31900d3e3b3f9e726b9040bc5ddf4.jpg",
-                                "posted_at": None,
-                                "redirect_id": "3FjSlJSRNe0ohCQPB14i7t",
-                                "text_first": "⚜️ המועדפים שלי ⚜️",
+                                "redirect_id": "3FjSXXXCQPB14Xt",
+                                "text_first": "My favorite songs!",
                                 "text_second": "272",
                             },
                         ],
-                        "profile_id": "4xgot8coriuhr6ad9f29pt0pv",
+                        "profile_id": "4xgot8coriuXXXXXpt0pv",
                     },
                     "tiktok": {
                         "is_active": False,
@@ -478,36 +479,27 @@ class Social:
                         "is_hidden": False,
                         "posts": [
                             {
-                                "author": "RobotTrick",
-                                "owner": "RobotTrick",
-                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
+                                "author": "username",
+                                "owner": "username",
+                                "photo": "https://pbs.twimg.com/profile_images/13XXXXX76/AvBXXXX_normal.jpg",
                                 "posted_at": "2021-08-24T10:02:45Z",
-                                "redirect_id": "https://twitter.com/RobotTrick/status/1430108307247804423",
-                                "text_first": "📸 כך תתקינו את מצלמת Gcam של גוגל על מכשיר האנדרואיד שלכם! https://t.co/PLaQyiL2Tw https://t.co/zdyuDg8Rkk",
+                                "redirect_id": "https://twitter.com/username/status/1XXXXXX423",
+                                "text_first": "My tweet #1 https://t.co/PLXXXX2Tw https://t.co/zXXXXkk",
                                 "text_second": None,
                             },
                             {
-                                "author": "RobotTrick",
-                                "owner": "RobotTrick",
-                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
+                                "author": "username",
+                                "owner": "username",
+                                "photo": "https://pbs.twimg.com/profile_images/1318XXXX0976/AvBXXXUk_normal.jpg",
                                 "posted_at": "2021-08-12T10:09:23Z",
-                                "redirect_id": "https://twitter.com/RobotTrick/status/1425761322197786624",
-                                "text_first": "בוט חדש המאפשר ליצור קישור לצ'אט וואטסאפ עם הודעה כתובה מראש, כך שמי שילחץ עליו, יועבר לצ'אט עם טקסט שתגדירו מראש.https://t.co/xtqdtHttAC",
-                                "text_second": None,
-                            },
-                            {
-                                "author": "RobotTrick",
-                                "owner": "RobotTrick",
-                                "photo": "https://pbs.twimg.com/profile_images/1318869321788030976/AvBmHZUk_normal.jpg",
-                                "posted_at": "2021-08-09T10:21:31Z",
-                                "redirect_id": "https://twitter.com/RobotTrick/status/1424677213341986816",
-                                "text_first": "במדריך שלפניכם נתמקד בהרשאות רוט בסגנון קצת שונה ממה שהכרתם עד היום. אפליקציית Shizuku מאפשרת לכם לספק הרשאות גבוהו… https://t.co/TkubAyx0RH",
+                                "redirect_id": "https://twitter.com/username/status/142XXXXX86624",
+                                "text_first": "My second tweet https://t.co/xtqXXXtAC",
                                 "text_second": None,
                             },
                         ],
-                        "profile_id": "RobotTrick",
+                        "profile_id": "username",
                     },
-                }
+                },
             }
         """
         if not uuid:
