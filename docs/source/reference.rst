@@ -95,3 +95,9 @@ Exceptions
 .. currentmodule:: meapi.exceptions
 .. autoclass:: MeApiException
 .. autoclass:: MeException
+
+Utils
+-----
+.. currentmodule:: meapi
+.. automethod:: Me.make_request
+.. automethod:: Me.valid_phone_number

@@ -18,9 +18,14 @@ class Util:
 
     def valid_phone_number(self, phone_number: Union[str, int]) -> int:
         """
-        Check if phone number is valid and return it clean without spaces or spacial characters
-        :param phone_number: phone number in global format
+        Check if phone number is valid and return it clean without spaces, pluses or other spacial characters.
+         - ``(972) 123-4567890``, ``+9721234567890``, ``123-456-7890`` --> ``9721234567890``.
+
+        :param phone_number: phone number in global format.
+        :type phone_number: Union[int, str]
+        :raises MeException: If length of phone number not between 9-15.
         :return: fixed phone number
+        :rtype: int
         """
         if phone_number:
             phone_number = sub(r'[\D]', '', str(phone_number))
@@ -30,13 +35,20 @@ class Util:
 
     def make_request(self, req_type: str, endpoint: str, body: dict = None, headers: dict = None, auth: bool = True) -> Union[dict, list]:
         """
-        Make request to Me api and return the response
-        :param req_type: post, get, put, patch, delete
-        :param endpoint: api endpoint
-        :param body:
-        :param headers:
-        :param auth: use access token or not
-        :return: api response
+        Make request to Me api and return the response.
+
+        :param req_type: HTTP request type: ``post``, ``get``, ``put``, ``patch``, ``delete``.
+        :type req_type: str
+        :param endpoint: api endpoint.
+        :type endpoint: str
+        :param body: The body of the request. Default: ``None``.
+        :type body: dict
+        :param headers: Use different headers instead of the default.
+        :type headers: dict
+        :param auth: Do use access token in this request? Default: ``True``.
+        :raises MeApiException: If HTTP status is bigger than ``400``.
+        :return: API response as dict or list.
+        :rtype: Union[dict, list]
         """
         url = ME_BASE_API + endpoint
         request_types = ['post', 'get', 'put', 'patch', 'delete']
@@ -65,7 +77,7 @@ class Util:
                 continue
 
             if response.status_code >= 400:
-                raise MeApiException(response.status_code, response_text, response.reason)
+                raise MeApiException(response.status_code, str(response_text.get('detail')), response.reason)
             return response_text
         else:
-            raise MeException(f"Error when trying to send a {req_type} request to {url}.")
+            raise MeException(f"Error when trying to send a {req_type} request to {url}, with body:\n{body} and with headers:\n{headers}.")
