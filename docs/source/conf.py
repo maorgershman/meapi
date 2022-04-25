@@ -74,3 +74,4 @@ else:
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_logo = "https://user-images.githubusercontent.com/42866208/164977163-2837836d-15bd-4a75-88fd-4e3fe2fd5dae.png"
