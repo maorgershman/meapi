@@ -66,9 +66,10 @@ class Settings:
         :rtype: Tuple[bool, list]
         """
         args = locals()
+        del args['self']
         body = {}
         for setting, value in args.items():
-            if value is not None and setting != 'self':
+            if value is not None:
                 body[setting] = value
         if not body:
             raise MeException("You need to change at least one setting!")

@@ -136,9 +136,10 @@ class Notifications:
             }
         """
         args = locals()
+        del args['self']
         filters = []
         for fil, val in args.items():
-            if fil.endswith("filter") and val:
+            if val:
                 filters = [*filters, *notification_categories[fil.replace("_filter", "")]]
         params = f"?page={page_number}&page_size={results_limit}&status=distributed"
         if filters:
@@ -189,9 +190,10 @@ class Notifications:
         :rtype: Tuple[bool, list]
         """
         args = locals()
+        del args['self']
         body = {}
         for setting, value in args.items():
-            if value is not None and setting != 'self':
+            if value is not None:
                 body[setting] = value
         if not body:
             raise MeException("You need to provide at least one setting!")
