@@ -27,19 +27,20 @@ Account
 .. automethod:: Me.block_numbers
 .. automethod:: Me.unblock_numbers
 .. automethod:: Me.get_blocked_numbers
-.. automethod:: Me.update_location
 .. automethod:: Me.upload_random_data
-.. automethod:: Me.delete_account
 .. automethod:: Me.suspend_account
+.. automethod:: Me.delete_account
 
 Social
 --------
 .. automethod:: Me.friendship
+.. automethod:: Me.suggest_turn_on_mutual
 .. automethod:: Me.report_spam
 .. automethod:: Me.who_deleted
 .. automethod:: Me.who_watched
 .. automethod:: Me.is_spammer
 .. automethod:: Me.get_age
+.. automethod:: Me.numbers_count
 
 Social network
 --------------
@@ -59,11 +60,23 @@ Group names
 Comments
 --------
 .. automethod:: Me.get_comments
+.. automethod:: Me.suggest_turn_on_comments
 .. automethod:: Me.get_comment
 .. automethod:: Me.publish_comment
 .. automethod:: Me.approve_comment
 .. automethod:: Me.delete_comment
 .. automethod:: Me.like_comment
+
+Location:
+---------
+.. automethod:: Me.update_location
+.. automethod:: Me.suggest_turn_on_location
+.. automethod:: Me.share_location
+.. automethod:: Me.get_distance
+.. automethod:: Me.stop_sharing_location
+.. automethod:: Me.stop_shared_location
+.. automethod:: Me.locations_shared_by_me
+.. automethod:: Me.locations_shared_with_me
 
 Notifications
 --------------
