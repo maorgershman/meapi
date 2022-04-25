@@ -4,12 +4,12 @@ class MeApiException(Exception):
 
     :param http_status: status code of the http request. ``400=>``.
     :type http_status: int
-    :param msg: dict with data about the error. Usually under the ``detail`` key.
-    :type msg: dict
-    :param reason: The reason to the error.
+    :param msg: ``api error msg``. for example: ``api_incorrect_activation_code``..
+    :type msg: str
+    :param reason: Human reason to the error.
     :type reason: str
     """
-    def __init__(self, http_status: int, msg: dict, reason: str = None):
+    def __init__(self, http_status: int, msg: str, reason: str = None):
         self.http_status = http_status
         self.msg = msg
         self.reason = reason
@@ -22,7 +22,7 @@ class MeException(Exception):
     """
     Raise this exception when there is general error in the meapi library.
 
-    :param msg: String of the exception.
+    :param msg: Reason of the exception.
     :type msg: str
     """
     def __init__(self, msg: str):
