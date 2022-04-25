@@ -114,8 +114,10 @@ class Account:
             response = self.make_request(req_type='get', endpoint='/main/contacts/search/?phone_number=' + str(
                 self.valid_phone_number(phone_number)))
         except MeApiException as err:
-            if err.http_status == 404 and err.msg['detail'] == 'Not found.':
+            if err.http_status == 404 and err.msg == 'Not found.':
                 return {}
+            else:
+                raise err
         return response
 
     def get_profile_info(self, uuid: str = None) -> dict:

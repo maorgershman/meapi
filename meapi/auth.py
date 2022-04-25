@@ -1,6 +1,7 @@
 from json import load, JSONDecodeError, dump
 from os import path
 from re import match
+from typing import Union
 from meapi.exceptions import MeException, MeApiException
 
 wa_auth_url = "https://wa.me/972543229534?text=Connectme"
@@ -8,17 +9,22 @@ tg_auth_url = "http://t.me/Meofficialbot?start=__iw__{}"
 
 
 class Auth:
-    def activate_account(self) -> bool:
+    def activate_account(self, activation_code: Union[int, str, None] = None) -> bool:
         """
         Activate new phone number account.
 
+        :param activation_code: You can pass the activation code if you want to skipp the prompt. Default: ``None``.
+        :type activation_code: Union[int, str, None]
+        :raises MeException: If pre-activation-code is not valid.
+        :raises MeApiException: If activation-code is not valid.
         :return: Is success.
         :rtype: bool
         """
-        print(f"To get access token you need to authorize yourself:"
-              f"\n* WhatsApp (Recommended): {wa_auth_url}\n* Telegram: {tg_auth_url.format(self.phone_number)}\n")
-        activation_code = None
-        access_token = None
+        if activation_code and not match(r'^\d{6}$', str(activation_code)):
+            raise MeException("Not a valid 6-digits activation code!")
+        if not activation_code:
+            print(f"To get access token you need to authorize yourself:"
+                  f"\n* WhatsApp (Recommended): {wa_auth_url}\n* Telegram: {tg_auth_url.format(self.phone_number)}\n")
         while not activation_code:
             activation_code = input("** Enter your verification code (6 digits): ")
             while not match(r'^\d{6}$', str(activation_code)):
@@ -31,14 +37,14 @@ class Auth:
         try:
             print("** Trying to verify...")
             results = self.make_request(req_type='post', endpoint='/auth/authorization/activate/', body=data, auth=False)
-            if results['access']:
+            if results.get('access'):
                 access_token = results['access']
             else:
                 raise MeException(str(results))
         except MeApiException as err:
-            if err.http_status == 400 and err.msg['detail'] == 'api_incorrect_activation_code':
-                print("Wrong activation code. Re-authing...")
-                return self.activate_account()
+            if err.http_status == 400 and err.msg == 'api_incorrect_activation_code':
+                err.reason = "Wrong activation code!"
+            raise err
 
         if access_token:
             print("Verification completed.")
@@ -51,7 +57,10 @@ class Auth:
     def generate_access_token(self) -> bool:
         """
         Generate new access token.
-        :return: is suceess
+
+        :raises MeApiException: If ``pwd_token`` is broken.
+        :return: is success.
+        :type: bool
         """
         auth_data = self.credentials_manager()
         if not auth_data:
@@ -63,13 +72,9 @@ class Auth:
         try:
             auth_data = self.make_request(req_type='post', endpoint='/auth/authorization/login/', body=body, auth=False)
         except MeApiException as err:
-            if err.http_status == 400 and err.msg['detail'] == 'api_incorrect_pwd_token':
-                print(f"** Your pwd_token in {self.config_file} is broken (You probably activated the account "
-                      f"elsewhere). \n** Continuing to account activation...\n")
-                if self.activate_account():
-                    return True
-            else:
-                raise err
+            if err.http_status == 400 and err.msg == 'api_incorrect_pwd_token':
+                err.reason = f"Your pwd_token in {self.config_file} is broken (You probably activated the account elsewhere)."
+            raise err
         access_token = auth_data['access']
         if access_token:
             print("Success to generate new token.")
@@ -78,11 +83,14 @@ class Auth:
             return True
         return False
 
-    def credentials_manager(self, data: dict = None) -> dict:
+    def credentials_manager(self, data: Union[dict, None] = None) -> dict:
         """
-        Read / write auth data from config file
-        :param data: dict with access token, refresh token and pwd_token
-        :return: auth data
+        Read / write auth data from ``config_file``.
+
+        :param data: Dict with ``access``, ``refresh`` and ``pwd_token``. Default: ``None``.
+        :type data: Union[dict, None]
+        :return: Dict with auth data.
+        :rtype: dict
         """
         if not path.isfile(str(self.config_file)):
             with open(self.config_file, "w") as new_config_file:
