@@ -673,6 +673,18 @@ class Social:
         body = {"uuid": str(uuid)}
         return self.make_request('post', '/main/users/profile/suggest-turn-on-mutual/', body)['requested']
 
+    def suggest_turn_on_location(self, uuid: str) -> bool:
+        """
+        Ask another user to share his location with you.
+
+        :param uuid: User uuid. See :py:func:`get_uuid`. Default: Your uuid.
+        :type uuid: str
+        :return: Is request success.
+        :rtype: bool
+        """
+        body = {"uuid": str(uuid)}
+        return self.make_request('post', '/main/users/profile/suggest-turn-on-location/', body)['requested']
+
     def get_age(self, uuid=None) -> float:
         """
         Get user age. calculate from ``date_of_birth``, provided by :py:func:`get_profile_info`.
