@@ -98,6 +98,18 @@ Exceptions
 
 Utils
 -----
+These methods are for internal use but can still be used if you wish.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. currentmodule:: meapi
 .. automethod:: Me.make_request
 .. automethod:: Me.valid_phone_number
+
+Auth
+----
+These methods are for internal use but can still be used if you wish.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automethod:: Me.activate_account
+.. automethod:: Me.generate_access_token
+.. automethod:: Me.credentials_manager
