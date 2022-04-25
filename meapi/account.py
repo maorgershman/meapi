@@ -434,7 +434,7 @@ class Account:
 
     def add_contacts(self, contacts: List[dict]):
         """
-        Upload new contacts to your Me account.
+        Upload new contacts to your Me account. See :py:func:`upload_random_data`.
 
         :param contacts: List of dicts with contacts data.
         :type contacts: List[dict])
@@ -540,7 +540,7 @@ class Account:
 
     def add_calls_to_log(self, calls: List[dict]):
         """
-        Add call to your calls log.
+        Add call to your calls log. See :py:func:`upload_random_data`.
 
         :param calls: List of dicts with calls data.
         :type calls: List[dict]
@@ -682,7 +682,7 @@ class Account:
         """
         Unblock numbers.
 
-        :param numbers: Single or list of phone numbers in international format.
+        :param numbers: Single or list of phone numbers in international format. See :py:func:`get_blocked_numbers`.
         :type numbers: Union[int, List[int]])
         :return: Is unblocking success.
         :rtype: bool
@@ -694,7 +694,7 @@ class Account:
 
     def get_blocked_numbers(self) -> List[dict]:
         """
-        Get list of your blocked numbers.
+        Get list of your blocked numbers. See :py:func:`unblock_numbers`.
 
         :return: list of dicts.
         :rtype: List[dict]
@@ -713,7 +713,7 @@ class Account:
 
     def update_location(self, lat: float, lon: float) -> bool:
         """
-        Update your location.
+        Update your location. See :py:func:`upload_random_data`.
 
         :param lat: location latitude coordinates.
         :type lat: float
@@ -726,6 +726,110 @@ class Account:
             raise Exception("Not a valid coordination!")
         body = {"location_latitude": float(lat), "location_longitude": float(lon)}
         return self.make_request('post', '/main/location/update/', body)['success']
+
+    def share_location(self, uuid: str) -> bool:
+        """
+        Share your :py:func:`update_location` with another user.
+
+        :param uuid: User uuid. See :py:func:`get_uuid`.
+        :type uuid: str
+        :return: is sharing success.
+        :rtype: bool
+        """
+        return self.make_request('post', '/main/users/profile/share-location/' + str(uuid) + "/")['success']
+
+    def get_distance(self, uuid: str) -> Union[float, None]:
+        """
+        Get your distance between you and another user.
+         - Only if the user shared his location with you. you can ask his location with :py:func:`suggest_turn_on_location`.
+
+        :param uuid: User uuid. See :py:func:`get_uuid`.
+        :type uuid: str
+        :return: The distance between you in kilometers. None if the user not shared his location with you.
+        :rtype: Union[float, None]
+        """
+        results = self.get_profile_info(uuid)
+        if results['profile'].get('distance'):
+            return results['profile']['distance']
+        return None
+
+    def stop_sharing_location(self, uuids: Union[str, List[str]]) -> bool:
+        """
+        Stop sharing your :py:func:`update_location` with users.
+
+        :param uuids: Single or list of uuids that you want to stop them from watching you location. See :py:func:`locations_shared_by_me`.
+        :type uuids: Union[str, List[str]]
+        :return: is stopping success.
+        :rtype: bool
+        """
+        if not isinstance(uuids, list):
+            uuids = [uuids]
+        body = {"uuids": uuids}
+        return self.make_request('post', '/main/users/profile/share-location/stop-for-me/', body)['success']
+
+    def stop_shared_location(self, uuids: Union[str, List[str]]) -> bool:
+        """
+        Stop locations that shared with you.
+
+        :param uuids: Single or list of uuids that you want to stop their location. See :py:func:`locations_shared_with_me`.
+        :type uuids: Union[str, List[str]]
+        :return: is stopping success.
+        :rtype: bool
+        """
+        if not isinstance(uuids, list):
+            uuids = [uuids]
+        body = {"uuids": uuids}
+        return self.make_request('post', '/main/users/profile/share-location/stop/', body)['success']
+
+    def locations_shared_by_me(self) -> List[dict]:
+        """
+        Get list of users that you shared your location with them. See also :py:func:`locations_shared_with_me`.
+
+        :return: list of dicts with contacts details.
+        :rtype: List[dict]
+
+        Example::
+
+            [
+                {
+                    "first_name": "Rachel Green",
+                    "last_name": "",
+                    "phone_number": 1234567890,
+                    "profile_picture": "https://d18zaexen4dp1s.cloudfront.net/59XXXXXXXXXfa67.jpg",
+                    "uuid": "XXXXX-XXXXX-XXXX-XXXX-XXXXXX"
+                }
+            ]
+        """
+        return self.make_request('get', '/main/users/profile/share-location/')
+
+    def locations_shared_with_me(self) -> dict:
+        """
+        Get users who have shared a location with you. See also :py:func:`locations_shared_by_me`.
+
+        :return: dict with list of uuids and list with users.
+        :rtype: dict
+
+        Example::
+
+            {
+                "shared_location_user_uuids": [
+                    "3850XXX-XXX-XXX-XXX-XXXXX"
+                ],
+                "shared_location_users": [
+                    {
+                        "author": {
+                            "first_name": "Gunther",
+                            "last_name": "",
+                            "phone_number": 3647632874324,
+                            "profile_picture": "https://d18zaexen4dp1s.cloudfront.net/dXXXXXXXXXXXXXXXXXXb.jpg",
+                            "uuid": "3850XXX-XXX-XXX-XXX-XXXXX"
+                        },
+                        "distance": 1.4099551982832228,
+                        "i_shared": False
+                    }
+                ]
+            }
+        """
 
     def upload_random_data(self, contacts=True, calls=True, location=True):
         """
