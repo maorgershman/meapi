@@ -8,13 +8,6 @@ ME_BASE_API = 'https://app.mobile.me.app'
 
 
 class Util:
-    def initialize_headers(self) -> dict:
-        """
-        Get default header requests
-        :return: dict with headers
-        """
-        return {'accept-encoding': 'gzip', 'user-agent': 'okhttp/4.9.1',
-                'content-type': 'application/json; charset=UTF-8'}
 
     def valid_phone_number(self, phone_number: Union[str, int]) -> int:
         """
@@ -55,7 +48,8 @@ class Util:
         if req_type not in request_types:
             raise MeException("Request type not in requests type list!!\nAvailable types: " + ", ".join(request_types))
         if headers is None:
-            headers = self.initialize_headers()
+            headers = {'accept-encoding': 'gzip', 'user-agent': 'okhttp/4.9.1',
+                       'content-type': 'application/json; charset=UTF-8'}
         max_rounds = 3
         while max_rounds != 0:
             max_rounds -= 1
