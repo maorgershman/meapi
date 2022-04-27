@@ -312,19 +312,55 @@ class Account:
         try:
             return self.get_profile_info()['uuid']
         except MeApiException as err:
-            if err.http_status == 401:  # on login, if no active account on this number
+            if err.http_status == 401:  # on login, if no active account on this number you need to register
                 print("** This is a new account and you need to register first.")
+                if self.account_details:
+                    account_details: dict = self.account_details
+                else:
+                    account_details = {}
+                print(account_details)
                 first_name = None
-                while not first_name:
-                    first_name = input("* Enter your first name (Required): ")
-                last_name = input("* Enter your last name (Optional): ") or None
-                email = input("* Enter your email (Optional): ") or None
-                results = self.update_profile_info(first_name=first_name, last_name=last_name, email=email,
-                                                   login_type='email')
+                last_name = None
+                email = None
+                upload_random_data = None
+
+                if account_details.get('first_name'):
+                    first_name = account_details['first_name']
+                else:
+                    while not first_name:
+                        first_name = input("* Enter your first name (Required): ")
+
+                if account_details.get('last_name'):
+                    last_name = account_details['last_name']
+                elif not account_details:
+                    last_name = input("* Enter your last name (Optional): ")
+
+                if account_details.get('email'):
+                    email = account_details['email']
+                elif not account_details:
+                    email = input("* Enter your email (Optional): ") or None
+
+                if account_details.get('upload_random_data'):
+                    upload_random_data = account_details['upload_random_data']
+                elif not account_details:
+                    answer = "X"
+                    while answer.upper() not in ['Y', 'N', '']:
+                        answer = input("* Do you want to upload some random data (contacts, calls, location) in order "
+                                       "to initialize the account? (Enter is Y) [Y/N]: ")
+                    if answer.upper() in ["Y", ""]:
+                        upload_random_data = True
+                    else:
+                        upload_random_data = False
+
+                results = self.update_profile_info(first_name=first_name, last_name=last_name, email=email, login_type='email')
                 if results[0]:
-                    print("** Your profile successfully created, But you may not be able to perform searches for a "
-                          "few hours. \nIt my help to upload some data. You can use in me.upload_random_data() or "
-                          "other account methods to activate your account.")
+                    msg = "** Your profile successfully created!"
+                    if upload_random_data:
+                        self.upload_random_data()
+                        msg += "\n* But you may not be able to perform searches for a few hours. It my help to " \
+                               "upload some data. You can use in me.upload_random_data() or other account methods to " \
+                               "activate your account."
+                    print(msg)
                     return self.get_uuid()
                 raise MeException("Can't update the following details: " + ", ".join(results[1]))
             else:

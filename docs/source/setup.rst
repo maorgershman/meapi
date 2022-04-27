@@ -15,9 +15,9 @@ Unofficial method
 ^^^^^^^^^^^^^^^^^
 **important notes:**
 
-    - **This method is for educational purposes only and its use is at your own risk.** See `disclaimer <https://meapi.readthedocs.io/en/latest/index.html#disclaimer>`_
+    - **This method is for educational purposes only and its use is at your own risk.** See `disclaimer <https://meapi.readthedocs.io/en/latest/index.html#disclaimer>`_.
     - In this method you are going to verify as a user of the app and get a token with access to all the actions that the app provides.
-    - After verification, if you are connected to another device, you will be disconnected automatically.
+    - After verification, if you are connected to another device, Chances are you will be disconnected.
     - For app users there is an Rate-limit of about ``350`` searches per day.
 
 **Verification:**
@@ -52,6 +52,25 @@ Unofficial method
 
 - If this is a new number that is not already open an account, you will be required to fill in some details like name and email in order to create an account.
 - If you keep getting ``404`` error, you may want to run the `upload_random_data() <https://meapi.readthedocs.io/en/latest/reference.html#meapi.Me.upload_random_data>`_ function, in order to activate the account.
+
+**Registration:**
+
+- You can also initialize the client with the necessary information in advance, good for cases of creating a new account:
+
+.. code-block:: python
+
+    from meapi import Me
+
+    data = {
+        'phone_number': 972123456789, # Required always
+        'activation_code': 123456, # Required only for the first time
+        'first_name': 'Regina', # Required for first account registration
+        'last_name': 'Phalange', # Optional for first account registration
+        'email': 'kenadams@friends.tv', # Optional for first account registration
+        'upload_random_data': True # Recommended for first account registration. Default: True
+    }
+
+    me = Me(account_details=data)
 
 **Credentials:**
 

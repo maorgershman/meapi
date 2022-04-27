@@ -16,10 +16,13 @@ class Auth:
         :param activation_code: You can pass the activation code if you want to skipp the prompt. Default: ``None``.
         :type activation_code: Union[int, str, None]
         :raises MeException: If pre-activation-code is not valid.
-        :raises MeApiException: If activation-code is not valid.
+        :raises MeApiException: msg: ``api_incorrect_activation_code`` If activation-code is incorrect.
         :return: Is success.
         :rtype: bool
         """
+        if not activation_code and self.activation_code:
+            activation_code = self.activation_code
+
         if activation_code and not match(r'^\d{6}$', str(activation_code)):
             raise MeException("Not a valid 6-digits activation code!")
         if not activation_code:
@@ -30,7 +33,7 @@ class Auth:
             while not match(r'^\d{6}$', str(activation_code)):
                 activation_code = input("** Incorrect code. The verification code includes 6 digits. Please enter: ")
         data = {
-            "activation_code": int(activation_code),
+            "activation_code": str(activation_code),
             "activation_type": "sms",
             "phone_number": int(self.phone_number)
         }
@@ -58,7 +61,7 @@ class Auth:
         """
         Generate new access token.
 
-        :raises MeApiException: If ``pwd_token`` is broken.
+        :raises MeApiException: msg: ``api_incorrect_pwd_token`` if ``pwd_token`` is broken.
         :return: is success.
         :type: bool
         """
@@ -89,6 +92,7 @@ class Auth:
 
         :param data: Dict with ``access``, ``refresh`` and ``pwd_token``. Default: ``None``.
         :type data: Union[dict, None]
+        :raises MeException: If the json file is broken or if the provided data not contains ``access`` or ``refresh`` token.
         :return: Dict with auth data.
         :rtype: dict
         """
