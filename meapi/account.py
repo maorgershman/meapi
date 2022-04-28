@@ -5,7 +5,7 @@ from meapi.random_data import get_random_data
 from random import randint
 
 
-def get_contacts(contacts: List[dict]) -> List[dict]:
+def validate_contacts(contacts: List[dict]) -> List[dict]:
     """
     Gets list of dict of contacts and return the valid contacts in the same format. to use of add_contacts and remove_contacts methods
     """
@@ -20,7 +20,7 @@ def get_contacts(contacts: List[dict]) -> List[dict]:
     return contacts_list
 
 
-def get_calls(calls: List[dict]) -> List[dict]:
+def validate_calls(calls: List[dict]) -> List[dict]:
     """
     Gets list of dict of calls and return the valid calls in the same format. to use of add_calls_to_log and remove_calls_from_log methods
     """
@@ -55,6 +55,7 @@ class Account:
 
         :param phone_number: International phone number format.
         :type phone_number: Union[str, int])
+        :raises MeApiException: msg: ``api_search_passed_limit`` if you passed the limit (About 350 per day in the unofficial auth method).
         :return: Dict with information about the phone number.
         :rtype: dict
 
@@ -128,8 +129,9 @@ class Account:
 
         :param uuid: uuid of the Me user. Default: your uuid.
         :type uuid: str
+        :raises MeApiException: msg: ``api_profile_view_passed_limit`` if you passed the limit (About 500 per day in the unofficial auth method).
         :return: Dict with profile details
-        :rtype:
+        :rtype: dict
 
         Example::
 
@@ -520,10 +522,28 @@ class Account:
                 },
             ]
         """
-        body = {"add": get_contacts(contacts), "is_first": False, "remove": []}
+        body = {"add": validate_contacts(contacts), "is_first": False, "remove": []}
         return self.make_request('post', '/main/contacts/sync/', body)
 
-    def remove_contacts(self, contacts: List[dict]):
+    def get_saved_contacts(self) -> List[dict]:
+        """
+        Get all the contacts stored in your contacts (Which has an Me account).
+
+        :return: List of dicts with all contacts data.
+        :rtype: List[dict]
+        """
+        return [contact for group in self.get_groups_names['names'] for contact in group['contacts'] if contact['in_contact_list']]
+
+    def get_unsaved_contacts(self) -> List[dict]:
+        """
+        Get all the contacts that not stored in your contacts (Which has an Me account).
+
+        :return: List of dicts with all contacts data.
+        :rtype: List[dict]
+        """
+        return [contact for group in self.get_groups_names['names'] for contact in group['contacts'] if not contact['in_contact_list']]
+
+    def remove_contacts(self, contacts: List[dict]) -> dict:
         """
         Remove contacts from your Me account.
 
@@ -573,10 +593,10 @@ class Account:
                 },
             ]
         """
-        body = {"add": [], "is_first": False, "remove": get_contacts(contacts)}
+        body = {"add": [], "is_first": False, "remove": validate_contacts(contacts)}
         return self.make_request('post', '/main/contacts/sync/', body)
 
-    def add_calls_to_log(self, calls: List[dict]):
+    def add_calls_to_log(self, calls: List[dict]) -> dict:
         """
         Add call to your calls log. See :py:func:`upload_random_data`.
 
@@ -614,10 +634,10 @@ class Account:
                 },
             ]
         """
-        body = {"add": get_calls(calls), "remove": []}
+        body = {"add": validate_calls(calls), "remove": []}
         return self.make_request('post', '/main/call-log/change-sync/', body)
 
-    def remove_calls_from_log(self, calls: List[dict]):
+    def remove_calls_from_log(self, calls: List[dict]) -> dict:
         """
         Remove calls from your calls log.
 
@@ -655,7 +675,7 @@ class Account:
                 },
             ]
         """
-        body = {"add": [], "remove": get_calls(calls)}
+        body = {"add": [], "remove": validate_calls(calls)}
         return self.make_request('post', '/main/call-log/change-sync/', body)
 
     def block_profile(self, phone_number: Union[str, int], block_contact=True, me_full_block=True) -> bool:

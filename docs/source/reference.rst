@@ -19,6 +19,8 @@ Account
 
 .. automethod:: Me.update_profile_info
 .. automethod:: Me.add_contacts
+.. automethod:: Me.get_saved_contacts
+.. automethod:: Me.get_unsaved_contacts
 .. automethod:: Me.remove_contacts
 .. automethod:: Me.add_calls_to_log
 .. automethod:: Me.remove_calls_from_log
