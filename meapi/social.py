@@ -606,21 +606,21 @@ class Social:
                              linkedin: bool = None,
                              ) -> bool:
         """
-        Switch social network status: hide or show.
+        Switch social network status: Show (``True``) or Hide (``False``).
 
-        :param twitter: Switch Twitter status. Default: None.
+        :param twitter: Switch Twitter status. Default: ``None``.
         :type twitter: bool
-        :param spotify: Switch Spotify status Default: None.
+        :param spotify: Switch Spotify status Default: ``None``.
         :type spotify: bool
-        :param instagram: Switch Instagram status Default: None.
+        :param instagram: Switch Instagram status Default: ``None``.
         :type instagram: bool
-        :param facebook: Switch Facebook status Default: None.
+        :param facebook: Switch Facebook status Default: ``None``.
         :type facebook: bool
-        :param pinterest: Switch Pinterest status Default: None.
+        :param pinterest: Switch Pinterest status Default: ``None``.
         :type pinterest: bool
-        :param linkedin: Switch Linkedin status Default: None.
+        :param linkedin: Switch Linkedin status Default: ``None``.
         :type linkedin: bool
-        :return: is switch success (you get true even if social won't set before)
+        :return: is switch success (you get ``True`` even if social won't set before).
         :rtype: bool
         """
         args = locals()
@@ -665,7 +665,7 @@ class Social:
         """
         Ask another user to turn on mutual contacts on his profile.
 
-        :param uuid: User uuid. See :py:func:`get_uuid`. Default: Your uuid.
+        :param uuid: User uuid. See :py:func:`get_uuid`.
         :type uuid: str
         :return: Is request success.
         :rtype: bool

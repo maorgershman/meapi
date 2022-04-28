@@ -51,7 +51,7 @@ Unofficial method
     Verification completed.
 
 - If this is a new number that is not already open an account, you will be required to fill in some details like name and email in order to create an account.
-- If you keep getting ``404`` error, you may want to run the `upload_random_data() <https://meapi.readthedocs.io/en/latest/reference.html#meapi.Me.upload_random_data>`_ function, in order to activate the account.
+- If you keep getting ``404`` error, you may want to run the :py:func:`~meapi.Me.upload_random_data` function, in order to activate the account.
 
 **Registration:**
 

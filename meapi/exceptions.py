@@ -8,6 +8,13 @@ class MeApiException(Exception):
     :type msg: str
     :param reason: Human reason to the error.
     :type reason: str
+
+    **Expected msg's:**
+
+    - ``api_incorrect_pwd_token`` in :py:func:`~meapi.Me.generate_access_token`.
+    - ``api_incorrect_activation_code`` in :py:func:`~meapi.Me.activate_account`.
+    - ``api_search_passed_limit`` in :py:func:`~meapi.Me.phone_search`.
+    - ``api_profile_view_passed_limit`` in :py:func:`~meapi.Me.get_profile_info`.
     """
     def __init__(self, http_status: int, msg: str, reason: str = None):
         self.http_status = http_status
