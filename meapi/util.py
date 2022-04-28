@@ -1,4 +1,4 @@
-from json import loads
+from json import loads, JSONDecodeError
 from re import match, sub
 from typing import Union
 from requests import patch, delete, put, get, post
@@ -26,7 +26,13 @@ class Util:
                 return int(phone_number)
         raise MeException("Not a valid phone number! " + phone_number)
 
-    def make_request(self, req_type: str, endpoint: str, body: dict = None, headers: dict = None, auth: bool = True) -> Union[dict, list]:
+    def make_request(self,
+                     req_type: str,
+                     endpoint: str,
+                     body: dict = None,
+                     headers: dict = None,
+                     auth: bool = True
+                     ) -> Union[dict, list]:
         """
         Make request to Me api and return the response.
 
@@ -65,13 +71,16 @@ class Util:
                 response = delete(url=url, json=body, headers=headers, proxies=self.proxies)
             elif req_type == 'patch':
                 response = patch(url=url, json=body, headers=headers, proxies=self.proxies)
-            response_text = loads(response.text)
+            try:
+                response_text = loads(response.text)
+            except JSONDecodeError:
+                raise MeException(f"The response (Status code: {response.status_code}) received does not contain a valid JSON:\n" + str(response.text))
             if response.status_code == 403 and self.phone_number:
                 self.generate_access_token()
                 continue
 
             if response.status_code >= 400:
-                raise MeApiException(response.status_code, str(response_text.get('detail')), response.reason)
+                raise MeApiException(response.status_code, str(response_text.get('detail') or response_text.get('phone_number') or response_text), response.reason)
             return response_text
         else:
             raise MeException(f"Error when trying to send a {req_type} request to {url}, with body:\n{body} and with headers:\n{headers}.")
